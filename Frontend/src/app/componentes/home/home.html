@@ -1,1 +1,47 @@
-<p>home works!</p>
+<section class="position-relative m-4 rounded-4 overflow-hidden">
+
+  <div id="carruselInicio" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carruselInicio" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carruselInicio" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carruselInicio" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carruselInicio" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carruselInicio" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="img/carrusel/moto1.jpg" class="d-block w-100 fotoCarrusel" alt="Moto 1">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/moto2.jpg" class="d-block w-100 fotoCarrusel" alt="Moto 2">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/moto3.jpg" class="d-block w-100 fotoCarrusel" alt="Moto 3">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/moto4.jpg" class="d-block w-100 fotoCarrusel" alt="Moto 4">
+      </div>
+      <div class="carousel-item">
+        <img src="img/carrusel/moto5.jpg" class="d-block w-100 fotoCarrusel" alt="Moto 5">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carruselInicio" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carruselInicio" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+
+  <div class="textoPortada position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center px-5 pe-none">
+    <div class="mx-5">
+      <span class="badge bg-danger mb-3">Tienda 100% online · Colombia</span>
+      <h1 class="display-4 fw-bold">Rueda seguro.<br>Rueda con estilo.</h1>
+      <p class="lead">Motos, repuestos, accesorios y seguridad vial. Todo en un solo lugar, enviado a tu puerta.</p>
+      <a routerLink="/productos" class="btn btn-danger btn-lg pe-auto">Explorar catálogo</a>
+    </div>
+  </div>
+
+</section>
