@@ -1,0 +1,396 @@
+/* ================================
+   NOSOTROS - JAJ MOTOS
+   ================================ */
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  background-color: #0D0D0D !important;
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #0D0D0D !important;
+}
+
+/* ================================
+   HERO
+   ================================ */
+.hero {
+  padding: 40px 0 60px;
+}
+
+.hero-titulo {
+  color: #C8102E !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 5px;
+  text-shadow: 0 0 30px rgba(200, 16, 46, 0.4);
+  margin-bottom: 1rem;
+}
+
+.hero-subtitulo {
+  color: #B3B3B3 !important;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.hero-linea {
+  width: 80px;
+  height: 4px;
+  background-color: #C8102E;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* ================================
+   SECCIONES
+   ================================ */
+.seccion {
+  padding: 60px 0;
+}
+
+.seccion-titulo {
+  color: #FFFFFF !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.seccion-titulo::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #C8102E;
+}
+
+.text-center .seccion-titulo::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.parrafo {
+  color: #B3B3B3 !important;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1.2rem;
+}
+
+.parrafo-centrado {
+  color: #B3B3B3 !important;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.texto-rojo {
+  color: #C8102E;
+  font-weight: 700;
+}
+
+/* ================================
+   HISTORIA - IMAGEN
+   ================================ */
+.imagen-marco {
+  position: relative;
+  padding: 15px;
+  border: 2px solid #C8102E;
+  border-radius: 16px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.imagen-marco:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(200, 16, 46, 0.25);
+}
+
+.imagen-placeholder {
+  background-color: #1A1A1A;
+  border-radius: 12px;
+  padding: 80px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+.imagen-icono {
+  font-size: 5rem;
+  color: #C8102E;
+  margin-bottom: 1rem;
+  display: block;
+  line-height: 1;
+}
+
+.imagen-placeholder p {
+  color: #B3B3B3 !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* ================================
+   TARJETAS DE VALORES
+   ================================ */
+.valor-card {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2a2a2a;
+  border-top: 4px solid #C8102E;
+  border-radius: 16px;
+  padding: 35px 25px;
+  height: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.valor-card:hover {
+  transform: translateY(-8px);
+  border-top-color: #A00D24;
+  box-shadow: 0 20px 50px rgba(200, 16, 46, 0.25);
+}
+
+.valor-icono {
+  font-size: 3rem;
+  color: #C8102E;
+  margin-bottom: 1rem;
+  display: block;
+  line-height: 1;
+}
+
+.valor-titulo {
+  color: #C8102E !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.valor-texto {
+  color: #B3B3B3 !important;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ================================
+   NÚMEROS
+   ================================ */
+.numeros {
+  background-color: #1A1A1A !important;
+  border-radius: 20px;
+  border: 1px solid #2a2a2a;
+  padding: 50px 20px;
+  margin: 40px 0;
+}
+
+.numero-item {
+  padding: 10px;
+}
+
+.numero {
+  color: #C8102E !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 0 20px rgba(200, 16, 46, 0.3);
+}
+
+.numero-label {
+  color: #B3B3B3 !important;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0;
+}
+
+/* ================================
+   BENEFICIOS
+   ================================ */
+.beneficio {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  padding: 28px 20px;
+  height: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.beneficio:hover {
+  border-color: #C8102E;
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(200, 16, 46, 0.2);
+}
+
+.beneficio-icono {
+  font-size: 2.5rem;
+  color: #C8102E;
+  display: block;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.beneficio-titulo {
+  color: #FFFFFF !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+
+.beneficio-texto {
+  color: #B3B3B3 !important;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ================================
+   CTA FINAL
+   ================================ */
+.cta-final {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2a2a2a;
+  border-top: 4px solid #C8102E;
+  border-radius: 20px;
+  padding: 60px 30px;
+  margin-top: 40px;
+}
+
+.cta-titulo {
+  color: #C8102E !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.cta-texto {
+  color: #B3B3B3 !important;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+.cta-botones {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ================================
+   BOTONES
+   ================================ */
+.btn-primary {
+  background-color: #C8102E !important;
+  border: none !important;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 13px 30px;
+  color: #FFFFFF !important;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #A00D24 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(200, 16, 46, 0.45);
+  color: #FFFFFF !important;
+}
+
+.btn-outline-danger {
+  color: #C8102E !important;
+  border: 2px solid #C8102E !important;
+  background-color: transparent !important;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 13px 30px;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #C8102E !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(200, 16, 46, 0.4);
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+@media (max-width: 768px) {
+  :host {
+    padding: 20px 15px 60px;
+  }
+
+  .hero-titulo {
+    font-size: 2.4rem;
+    letter-spacing: 3px;
+  }
+
+  .hero-subtitulo {
+    font-size: 1rem;
+  }
+
+  .seccion-titulo {
+    font-size: 1.7rem;
+    letter-spacing: 2px;
+  }
+
+  .numero {
+    font-size: 2.2rem;
+  }
+
+  .cta-titulo {
+    font-size: 1.9rem;
+    letter-spacing: 2px;
+  }
+
+  .valor-card,
+  .beneficio {
+    padding: 25px 18px;
+  }
+
+  .imagen-icono {
+    font-size: 4rem;
+  }
+
+  .valor-icono,
+  .beneficio-icono {
+    font-size: 2.2rem;
+  }
+}
