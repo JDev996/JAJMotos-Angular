@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+*
+:root {
+   --color-fondo: #0D0D0D;
+   --color-tarjetas: #1A1A1A;
+   --color-botones-links: #C8102E;
+   --color-hover: #A00D24;
+   --color-texto: #FFFFFF;
+   --color-texto-secundario: #B3B3B3;
+   --color-dorado: #C9A227;
+}
+
+body {
+   background-color: var(--color-fondo);
+   color: var(--color-texto);
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   line-height: 1.6;
+}
+
+h1, h2, h3, .navbar-brand {
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
