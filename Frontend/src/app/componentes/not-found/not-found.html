@@ -1,1 +1,57 @@
-<p>not-found works!</p>
+<div class="container-fluid">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-lg-8 col-md-10 text-center">
+
+      <!-- Ícono decorativo superior -->
+      <div class="icono-superior">
+        <i class="bi bi-signpost-split"></i>
+      </div>
+
+      <!-- Código 404 gigante -->
+      <h1 class="error-codigo">404</h1>
+
+      <!-- Línea decorativa -->
+      <div class="error-linea"></div>
+
+      <!-- Mensaje -->
+      <h2 class="error-titulo">¡Ups! Te saliste de la ruta</h2>
+      <p class="error-texto">
+        Parece que la página que buscas no existe, fue movida o cambió de dirección.
+        Pero no te preocupes, en <strong class="texto-rojo">JAJ MOTOS</strong> siempre
+        hay un camino de regreso.
+      </p>
+
+      <!-- Botones de acción -->
+      <div class="error-botones">
+        <a routerLink="/home" class="btn btn-primary btn-lg">
+          <i class="bi bi-house-door me-2"></i>
+          Volver al Inicio
+        </a>
+        <a routerLink="/productos" class="btn btn-outline-danger btn-lg">
+          <i class="bi bi-bicycle me-2"></i>
+          Ver Productos
+        </a>
+      </div>
+
+      <!-- Sugerencias de rutas -->
+      <div class="sugerencias">
+        <p class="sugerencias-titulo">Quizás buscabas:</p>
+        <div class="sugerencias-links">
+          <a routerLink="/productos" class="sugerencia-link">
+            <i class="bi bi-box-seam"></i> Productos
+          </a>
+          <a routerLink="/distribuidores" class="sugerencia-link">
+            <i class="bi bi-geo-alt"></i> Distribuidores
+          </a>
+          <a routerLink="/contacto" class="sugerencia-link">
+            <i class="bi bi-envelope"></i> Contacto
+          </a>
+          <a routerLink="/nosotros" class="sugerencia-link">
+            <i class="bi bi-people"></i> Nosotros
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

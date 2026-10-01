@@ -1,0 +1,234 @@
+/* ================================
+   CONTACTO - JAJ MOTOS
+   ================================ */
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  padding: 60px 20px;
+  background-color: #0D0D0D !important;
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #0D0D0D !important;
+}
+
+/* ================================
+   ENCABEZADO
+   ================================ */
+.titulo-principal {
+  color: #C8102E !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-shadow: 0 0 25px rgba(200, 16, 46, 0.3);
+  margin-bottom: 0.5rem;
+}
+
+.subtitulo {
+  color: #B3B3B3 !important;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+/* ================================
+   TARJETA DE INFORMACIÓN (Izquierda)
+   ================================ */
+.info-card {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2a2a2a;
+  border-top: 4px solid #C8102E;
+  border-radius: 16px;
+  padding: 35px 30px;
+  height: 100%;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.info-titulo {
+  color: #C8102E !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+}
+
+.info-icono {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-top: 3px;
+}
+
+.info-item h5 {
+  color: #FFFFFF !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.info-item p {
+  color: #B3B3B3 !important;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ================================
+   TARJETA DEL FORMULARIO (Derecha)
+   ================================ */
+.contacto-card {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2a2a2a;
+  border-top: 4px solid #C8102E;
+  border-radius: 16px;
+  padding: 40px 35px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.form-titulo {
+  color: #FFFFFF !important;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+/* ================================
+   CAMPOS
+   ================================ */
+.form-label {
+  color: #FFFFFF !important;
+  font-weight: 500;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  background-color: #0D0D0D !important;
+  border: 1px solid #2a2a2a !important;
+  color: #FFFFFF !important;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  background-color: #0D0D0D !important;
+  border-color: #C8102E !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 0.2rem rgba(200, 16, 46, 0.25) !important;
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: #555555 !important;
+  font-style: italic;
+}
+
+/* Select */
+select.form-control {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23B3B3B3' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 14px;
+  padding-right: 40px;
+}
+
+select.form-control option {
+  background-color: #1A1A1A;
+  color: #FFFFFF;
+}
+
+/* Textarea */
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ================================
+   BOTÓN
+   ================================ */
+.btn-primary {
+  background-color: #C8102E !important;
+  border: none !important;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 13px;
+  color: #FFFFFF !important;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #A00D24 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(200, 16, 46, 0.45);
+  color: #FFFFFF !important;
+}
+
+/* Botón outline rojo */
+.btn-outline-danger {
+  color: #C8102E !important;
+  border: 2px solid #C8102E !important;
+  background-color: transparent !important;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  padding: 10px 25px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #C8102E !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(200, 16, 46, 0.4);
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+@media (max-width: 768px) {
+  :host {
+    padding: 40px 15px;
+  }
+
+  .titulo-principal {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .info-card,
+  .contacto-card {
+    padding: 30px 20px;
+  }
+}

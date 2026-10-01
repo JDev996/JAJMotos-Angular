@@ -1,1 +1,119 @@
-<p>contacto works!</p>
+<div class="container-fluid">
+
+  <!-- Encabezado de la página -->
+  <div class="text-center mb-5">
+    <h1 class="titulo-principal">CONTÁCTANOS</h1>
+    <p class="subtitulo">Estamos aquí para ayudarte. Escríbenos y te responderemos pronto.</p>
+  </div>
+
+  <!-- Contenido: Formulario + Info -->
+  <div class="row justify-content-center g-4">
+
+    <!-- COLUMNA IZQUIERDA: Información de contacto -->
+    <div class="col-lg-4 col-md-5">
+      <div class="info-card">
+        <h3 class="info-titulo">Información</h3>
+
+        <div class="info-item">
+          <span class="info-icono">📍</span>
+          <div>
+            <h5>Dirección</h5>
+            <p>Calle 123 #45-67<br>Bogotá, Colombia</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <span class="info-icono">📞</span>
+          <div>
+            <h5>Teléfono</h5>
+            <p>+57 300 123 4567</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <span class="info-icono">✉️</span>
+          <div>
+            <h5>Correo</h5>
+            <p>contacto&#64;jajmotos.com</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <span class="info-icono">🕒</span>
+          <div>
+            <h5>Horario</h5>
+            <p>Lun - Sáb: 8:00 AM - 6:00 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: Formulario -->
+    <div class="col-lg-6 col-md-7">
+      <div class="contacto-card">
+        <h3 class="form-titulo">Envíanos un mensaje</h3>
+
+        <form>
+          <!-- Fila: Nombre y Email -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" id="nombre" name="nombre"
+                     placeholder="Tu nombre" required>
+            </div>
+            <div class="col-md-6">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <input type="email" class="form-control" id="email" name="email"
+                     placeholder="ejemplo@correo.com" required>
+            </div>
+          </div>
+
+          <!-- Fila: Teléfono y Asunto -->
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="telefono" name="telefono"
+                     placeholder="+57 300 000 0000">
+            </div>
+            <div class="col-md-6">
+              <label for="asunto" class="form-label">Asunto</label>
+              <select class="form-control" id="asunto" name="asunto" required>
+                <option value="" disabled selected>Selecciona un asunto</option>
+                <option value="cotizacion">Cotización de moto</option>
+                <option value="mantenimiento">Mantenimiento</option>
+                <option value="repuestos">Repuestos</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Mensaje -->
+          <div class="mt-3">
+            <label for="mensaje" class="form-label">Mensaje</label>
+            <textarea class="form-control" id="mensaje" name="mensaje" rows="5"
+                      placeholder="Cuéntanos en qué podemos ayudarte..." required></textarea>
+          </div>
+
+          <!-- Botón -->
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Enviar Mensaje
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mapa o CTA extra (opcional) -->
+  <div class="text-center mt-5">
+    <p class="subtitulo">
+      ¿Prefieres visitarnos? Te esperamos en nuestro concesionario.
+    </p>
+    <a routerLink="/distribuidores" class="btn btn-outline-danger btn-lg mt-2">
+      Ver Distribuidores
+    </a>
+  </div>
+
+</div>
