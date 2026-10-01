@@ -19,3 +19,48 @@
   height: 200px;
   object-fit: cover;
 }
+
+.carousel-item {
+  overflow: hidden;
+}
+
+.carousel-item.active .fotoCarrusel {
+  animation: zoomLento 8s ease-out forwards;
+}
+
+@keyframes zoomLento {
+  from { transform: scale(1.12); }
+  to   { transform: scale(1); }
+}
+
+.anim-entrada {
+  opacity: 0;
+  animation: subirAparecer 0.8s ease-out forwards;
+}
+
+.anim-1 { animation-delay: 0.2s; }
+.anim-2 { animation-delay: 0.45s; }
+.anim-3 { animation-delay: 0.7s; }
+.anim-4 { animation-delay: 0.95s; }
+
+@keyframes subirAparecer {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.botonPortada {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.botonPortada:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(200, 16, 46, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-item.active .fotoCarrusel,
+  .anim-entrada {
+    animation: none;
+    opacity: 1;
+  }
+}
