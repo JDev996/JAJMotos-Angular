@@ -1,0 +1,12 @@
+.enlacePie {
+  color: var(--color-texto-secundario);
+  text-decoration: none;
+}
+
+.enlacePie:hover {
+  color: var(--color-botones-links);
+}
+
+.botonAsesor {
+  z-index: 1050;
+}
