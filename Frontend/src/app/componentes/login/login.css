@@ -1,7 +1,3 @@
-/* ================================
-   LOGIN - JAJ MOTOS
-   Colores directos para evitar conflictos
-   ================================ */
 
 :host {
   display: block;
@@ -12,7 +8,6 @@
   box-sizing: border-box;
 }
 
-/* Contenedor principal centrado */
 .container-fluid {
   display: flex;
   justify-content: center;
@@ -23,9 +18,6 @@
   background-color: #0D0D0D !important;
 }
 
-/* ================================
-   TARJETA DEL LOGIN
-   ================================ */
 .card {
   background-color: #1A1A1A !important;
   border: 1px solid #2a2a2a !important;
@@ -43,9 +35,6 @@
   box-shadow: 0 20px 60px rgba(200, 16, 46, 0.2) !important;
 }
 
-/* ================================
-   TÍTULOS
-   ================================ */
 .card h2 {
   color: #C8102E !important;
   letter-spacing: 3px;
@@ -63,9 +52,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* ================================
-   CAMPOS DEL FORMULARIO
-   ================================ */
 .form-label {
   color: #FFFFFF !important;
   font-weight: 500;
@@ -97,9 +83,6 @@
   font-style: italic;
 }
 
-/* ================================
-   BOTÓN INICIAR SESIÓN
-   ================================ */
 .btn-primary {
   background-color: #C8102E !important;
   border: none !important;
@@ -127,9 +110,6 @@
   box-shadow: 0 5px 15px rgba(200, 16, 46, 0.3);
 }
 
-/* ================================
-   ENLACES INFERIORES
-   ================================ */
 .card a.text-secondary {
   color: #B3B3B3 !important;
   transition: color 0.3s ease, letter-spacing 0.3s ease;
@@ -141,9 +121,6 @@
   letter-spacing: 1px;
 }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
 @media (max-width: 480px) {
   :host {
     padding: 40px 15px;
@@ -158,4 +135,77 @@
     font-size: 1.6rem;
     letter-spacing: 2px;
   }
+}
+
+:host {
+  display: block;
+  position: relative;
+}
+
+.pista {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 110px;
+  overflow: hidden;      
+  pointer-events: none;  
+}
+
+.pista::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 16, 46, 0.6), transparent);
+}
+
+.moto {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 170px;
+  animation:
+    pasar 5s linear infinite,
+    vibrar 0.12s ease-in-out infinite alternate;
+}
+
+@keyframes pasar {
+  0%   { translate: -220px 0; }
+  55%  { translate: calc(100vw + 40px) 0; }
+  100% { translate: calc(100vw + 40px) 0; }
+}
+
+@keyframes vibrar {
+  from { transform: translateY(0); }
+  to   { transform: translateY(1.5px); }
+}
+
+.rueda {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: girar 0.3s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+.estela {
+  animation: parpadeo 0.2s ease-in-out infinite alternate;
+}
+
+@keyframes parpadeo {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+.farola {
+  filter: drop-shadow(0 0 4px #fff6c8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pista { display: none; }
 }
