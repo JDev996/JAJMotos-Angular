@@ -1,0 +1,22 @@
+.mensajesChat {
+  height: 320px;
+  overflow-y: auto;
+}
+
+.burbujaBot,
+.burbujaMotero {
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-width: 85%;
+  width: fit-content;
+}
+
+.burbujaBot {
+  background-color: var(--color-tarjetas);
+}
+
+.burbujaMotero {
+  background-color: var(--color-botones-links);
+  margin-left: auto;
+}
