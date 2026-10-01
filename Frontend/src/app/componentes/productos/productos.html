@@ -1,1 +1,101 @@
-<p>productos works!</p>
+<section class="header">
+  <h1 class="header__title">NUESTROS PRODUCTOS</h1>
+  <p class="header__subtitle">
+    Motos, repuestos y accesorios en un solo lugar.<br>
+    Todo lo que necesitas para rodar seguro.
+  </p>
+  <div class="header__separator">
+    <span class="header__separator-line"></span>
+    <span class="header__separator-icon">✦</span>
+    <span class="header__separator-line"></span>
+  </div>
+</section>
+
+<nav class="categorias-nav">
+  @for (cat of categorias; track cat.id) {
+    <button type="button" class="categorias-nav__link" (click)="irACategoria(cat.id)">{{ cat.titulo }}</button>
+  }
+</nav>
+
+@if (marcaFiltro) {
+  <div class="aviso-marca">
+    Mostrando productos de <strong>{{ marcaFiltro }}</strong>
+    <button type="button" class="filtro-precio__limpiar" (click)="quitarFiltroMarca()">Ver todo</button>
+  </div>
+}
+
+<main>
+  @for (cat of categoriasVisibles(); track cat.id) {
+    <section [id]="cat.id" class="categoria">
+      <h2 class="categoria__titulo">{{ cat.titulo }}</h2>
+
+      <!-- Filtro de precio: #min y #max son "referencias" a los inputs -->
+      <div class="filtro-precio">
+        <label>
+          Precio mínimo
+          <input #min type="number" placeholder="$ 0" min="0">
+        </label>
+        <label>
+          Precio máximo
+          <input #max type="number" placeholder="Sin límite" min="0">
+        </label>
+        <button type="button" class="filtro-precio__boton" (click)="aplicarFiltro(cat.id, min.value, max.value)">Filtrar</button>
+        <button type="button" class="filtro-precio__limpiar" (click)="limpiarFiltro(cat.id, min, max)">Limpiar</button>
+      </div>
+
+      <div class="productos-grid">
+        @for (p of productosPaginados(cat); track p.id) {
+          <article class="producto-card" [class.producto-card--expandida]="expandidas.has(p.id)">
+
+            <div class="producto-card__galeria-wrap">
+              <div #galeria class="producto-card__galeria">
+                @for (img of p.imagenes; track img; let i = $index) {
+                  <div class="producto-card__slide">
+                    <img [src]="img" [alt]="p.nombre + ' - vista ' + (i + 1)">
+                  </div>
+                }
+              </div>
+              <button type="button" class="producto-card__flecha producto-card__flecha--prev"
+                (click)="deslizarGaleria(galeria, -1)" aria-label="Imagen anterior">‹</button>
+              <button type="button" class="producto-card__flecha producto-card__flecha--next"
+                (click)="deslizarGaleria(galeria, 1)" aria-label="Imagen siguiente">›</button>
+            </div>
+
+            <div class="producto-card__body">
+              <span class="producto-card__marca">{{ p.marca }}</span>
+              <h3 class="producto-card__nombre">{{ p.nombre }}</h3>
+              <span class="producto-card__precio">$ {{ p.precio.toLocaleString('es-CO') }}</span>
+              <div class="producto-card__acciones">
+                <button type="button" class="producto-card__boton" (click)="agregarAlCarrito(p)">Agregar al carrito</button>
+                @if (p.especificaciones) {
+                  <button type="button" class="producto-card__boton producto-card__boton--secundario"
+                    (click)="toggleEspecificaciones(p.id)">
+                    {{ expandidas.has(p.id) ? 'Ocultar especificaciones' : 'Ver especificaciones' }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (p.especificaciones) {
+              <div class="producto-card__especificaciones">
+                @for (e of p.especificaciones; track e.etiqueta) {
+                  <div class="especificacion">
+                    <span class="especificacion__icono">{{ e.icono }}</span>
+                    <span class="especificacion__valor">{{ e.valor }}</span>
+                    <span class="especificacion__etiqueta">{{ e.etiqueta }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </article>
+        } @empty {
+          <p class="categoria__sin-resultados">No hay productos que coincidan con el filtro.</p>
+        }
+      </div>
+
+      @if (productosFiltrados(cat).length > visibles[cat.id]) {
+        <button type="button" class="mostrar-mas" (click)="mostrarMas(cat.id)">Mostrar más</button>
+      }
+    </section>
+  }
+</main>
