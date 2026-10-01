@@ -1,1 +1,55 @@
-<p>distribuidores works!</p>
+<main class="distribuidores-principal">
+  <div class="distribuidores-header">
+    <span class="eyebrow">Ver de distribuidores</span>
+    <h1>NUESTROS ALIADOS</h1>
+    <p>Distribuimos las marcas más reconocidas del mercado colombiano. Encuentra tu marca favorita.</p>
+  </div>
+
+  <section class="brand-grid" aria-label="Marcas asociadas">
+    @for (m of marcas; track m.id) {
+      <article class="brand-card" [class]="m.clase">
+        <div class="brand-card__header">
+          <h2>{{ m.id }}</h2>
+        </div>
+        <p>{{ m.descripcion }}</p>
+        <div class="brand-card__meta">
+          <span>MODELO: {{ m.id }}</span>
+          <span>{{ m.etiquetas }}</span>
+        </div>
+        <button type="button" class="brand-card__filter-button" (click)="abrirModal(m.id)">
+          Ver motos de {{ m.nombre }}
+        </button>
+      </article>
+    }
+  </section>
+</main>
+
+<div class="filtro-modal" [class.filtro-modal--visible]="modalAbierto" [attr.aria-hidden]="!modalAbierto"
+  (click)="cerrarModal()">
+  <div class="filtro-modal__contenido" role="dialog" aria-modal="true" aria-labelledby="filtro-titulo"
+    (click)="$event.stopPropagation()">
+    <button type="button" class="filtro-modal__cerrar" (click)="cerrarModal()" aria-label="Cerrar filtro">X</button>
+    <span class="filtro-modal__eyebrow">Catálogo JAJ Motos</span>
+    <h2 id="filtro-titulo">Encuentra lo que buscas</h2>
+    <p class="filtro-modal__descripcion">Elige una categoría para consultar los productos disponibles de esta marca.</p>
+
+    <form class="filtro-form" (submit)="$event.preventDefault(); aplicarFiltro(marca.value, categoria.value)">
+      <label for="filtro-marca">Marca</label>
+      <select #marca id="filtro-marca">
+        @for (m of marcas; track m.id) {
+          <option [value]="m.id" [selected]="m.id === marcaSeleccionada">{{ m.nombre }}</option>
+        }
+      </select>
+
+      <label for="filtro-categoria">Categoría</label>
+      <select #categoria id="filtro-categoria">
+        <option value="motos">Motos</option>
+        <option value="repuestos">Repuestos</option>
+        <option value="accesorios">Accesorios</option>
+        <option value="todos">Todos los productos</option>
+      </select>
+
+      <button type="submit" class="filtro-modal__aplicar">Aplicar filtro</button>
+    </form>
+  </div>
+</div>
