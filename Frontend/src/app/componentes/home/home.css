@@ -1,0 +1,21 @@
+.fotoCarrusel {
+  height: 80vh;
+  object-fit: cover;
+  filter: brightness(0.45);
+}
+
+.textoPortada h1 {
+  font-family: inherit;
+  text-transform: none;
+}
+
+.logoMarca {
+  height: 80px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.fotoNoticia {
+  height: 200px;
+  object-fit: cover;
+}
