@@ -46,6 +46,33 @@
   </div>
 </footer>
 
-<a routerLink="/asesor" class="btn btn-danger btn-lg rounded-pill shadow position-fixed bottom-0 end-0 m-4 botonAsesor">
+<div class="collapse position-fixed panelChat" id="panelChat">
+  <div class="card shadow">
+
+    <div class="card-header bg-danger text-white fw-bold">
+      <i class="bi bi-robot me-2"></i>Asesor JAJ Motos
+    </div>
+
+    <div class="card-body mensajesChat">
+      <div class="burbujaBot">¡Hola! Contame qué buscás pues!: una moto económica, de ciudad o de ruta.</div>
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex gap-2 mb-2">
+        <button type="button" class="btn btn-outline-danger btn-sm">Barata</button>
+        <button type="button" class="btn btn-outline-danger btn-sm">Ciudad</button>
+        <button type="button" class="btn btn-outline-danger btn-sm">Ruta</button>
+      </div>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Escribí tu mensaje...">
+        <button type="button" class="btn btn-danger">Enviar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<button type="button" class="btn btn-danger btn-lg rounded-pill shadow position-fixed bottom-0 end-0 m-4 botonAsesor"
+  data-bs-toggle="collapse" data-bs-target="#panelChat" aria-expanded="false" aria-controls="panelChat">
   <i class="bi bi-chat-dots me-2"></i>Asesor
-</a>
+</button>
