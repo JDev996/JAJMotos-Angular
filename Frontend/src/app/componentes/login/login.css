@@ -1,10 +1,10 @@
-
 :host {
   display: block;
+  position: relative;
   width: 100%;
   min-height: 100vh;
   padding: 60px 20px;
-  background-color: #0D0D0D !important;
+  background-color: transparent !important;
   box-sizing: border-box;
 }
 
@@ -15,7 +15,7 @@
   width: 100%;
   min-height: calc(100vh - 120px);
   padding: 0;
-  background-color: #0D0D0D !important;
+  background-color: transparent !important;
 }
 
 .card {
@@ -121,35 +121,14 @@
   letter-spacing: 1px;
 }
 
-@media (max-width: 480px) {
-  :host {
-    padding: 40px 15px;
-  }
-
-  .card {
-    padding: 30px 20px;
-    border-radius: 12px !important;
-  }
-
-  .card h2 {
-    font-size: 1.6rem;
-    letter-spacing: 2px;
-  }
-}
-
-:host {
-  display: block;
-  position: relative;
-}
-
 .pista {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 110px;
-  overflow: hidden;      
-  pointer-events: none;  
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .pista::after {
@@ -204,6 +183,22 @@
 
 .farola {
   filter: drop-shadow(0 0 4px #fff6c8);
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 40px 15px;
+  }
+
+  .card {
+    padding: 30px 20px;
+    border-radius: 12px !important;
+  }
+
+  .card h2 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

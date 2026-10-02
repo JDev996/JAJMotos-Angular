@@ -1,25 +1,70 @@
-/* ================================
-   CONTACTO - JAJ MOTOS
-   ================================ */
+:root {
+  --color-fondo: #0D0D0D;
+  --color-tarjetas: #1A1A1A;
+  --color-botones-links: #C8102E;
+  --color-hover: #A00D24;
+  --color-texto: #FFFFFF;
+  --color-texto-secundario: #B3B3B3;
+  --color-dorado: #C9A227;
+}
+
+html, body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-fondo);
+  background-image:
+    radial-gradient(ellipse at top, rgba(200, 16, 46, 0.12) 0%, transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  background-attachment: fixed;
+  color: var(--color-texto);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 16, 46, 0.8) 50%,
+    transparent 100%
+  );
+  opacity: 0.7;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+h1, h2, h3, .navbar-brand {
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
 
 :host {
   display: block;
   width: 100%;
   min-height: 100vh;
   padding: 60px 20px;
-  background-color: #0D0D0D !important;
+  background-color: transparent !important;
   box-sizing: border-box;
 }
 
 .container-fluid {
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #0D0D0D !important;
+  background-color: transparent !important;
 }
 
-/* ================================
-   ENCABEZADO
-   ================================ */
 .titulo-principal {
   color: #C8102E !important;
   font-family: 'Barlow Condensed', sans-serif;
@@ -37,9 +82,6 @@
   letter-spacing: 0.5px;
 }
 
-/* ================================
-   TARJETA DE INFORMACIÓN (Izquierda)
-   ================================ */
 .info-card {
   background-color: #1A1A1A !important;
   border: 1px solid #2a2a2a;
@@ -91,9 +133,6 @@
   line-height: 1.5;
 }
 
-/* ================================
-   TARJETA DEL FORMULARIO (Derecha)
-   ================================ */
 .contacto-card {
   background-color: #1A1A1A !important;
   border: 1px solid #2a2a2a;
@@ -115,9 +154,6 @@
   border-bottom: 1px solid #2a2a2a;
 }
 
-/* ================================
-   CAMPOS
-   ================================ */
 .form-label {
   color: #FFFFFF !important;
   font-weight: 500;
@@ -149,7 +185,6 @@
   font-style: italic;
 }
 
-/* Select */
 select.form-control {
   cursor: pointer;
   appearance: none;
@@ -165,15 +200,11 @@ select.form-control option {
   color: #FFFFFF;
 }
 
-/* Textarea */
 textarea.form-control {
   resize: vertical;
   min-height: 120px;
 }
 
-/* ================================
-   BOTÓN
-   ================================ */
 .btn-primary {
   background-color: #C8102E !important;
   border: none !important;
@@ -194,7 +225,6 @@ textarea.form-control {
   color: #FFFFFF !important;
 }
 
-/* Botón outline rojo */
 .btn-outline-danger {
   color: #C8102E !important;
   border: 2px solid #C8102E !important;
@@ -214,9 +244,6 @@ textarea.form-control {
   box-shadow: 0 10px 25px rgba(200, 16, 46, 0.4);
 }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
 @media (max-width: 768px) {
   :host {
     padding: 40px 15px;

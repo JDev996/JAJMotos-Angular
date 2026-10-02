@@ -9,13 +9,13 @@ import { Login } from './componentes/login/login';
 import { NotFound } from './componentes/not-found/not-found';
 
 export const routes: Routes = [
-  { path: 'home', title: 'Inicio', component: Home },
-  { path: 'productos', title: 'Productos', component: Productos },
-  { path: 'distribuidores', title: 'Distribuidores', component: Distribuidores },
-  { path: 'nosotros', title: 'Nosotros', component: Nosotros },
-  { path: 'contacto', title: 'Contacto', component: Contacto },
-  { path: 'asesor', title: 'Asesor', component: Asesor },
-  { path: 'login', title: 'Login', component: Login },
+  { path: 'home',           title: 'Inicio',         component: Home,           data: { animation: 'Home' } },
+  { path: 'productos',      title: 'Productos',      component: Productos,      data: { animation: 'Productos' } },
+  { path: 'distribuidores', title: 'Distribuidores', component: Distribuidores, data: { animation: 'Distribuidores' } },
+  { path: 'nosotros',       title: 'Nosotros',       component: Nosotros,       data: { animation: 'Nosotros' } },
+  { path: 'contacto',       title: 'Contacto',       component: Contacto,       data: { animation: 'Contacto' } },
+  { path: 'asesor',         title: 'Asesor',         component: Asesor,         data: { animation: 'Asesor' } },
+  { path: 'login',          title: 'Login',          component: Login,          data: { animation: 'Login' } },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', title: 'No encontrado', component: NotFound },
+  { path: '**',             title: 'No encontrado',  component: NotFound,       data: { animation: 'NotFound' } },
 ];
