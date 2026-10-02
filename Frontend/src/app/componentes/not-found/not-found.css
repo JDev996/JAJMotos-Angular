@@ -1,23 +1,16 @@
-/* ================================
-   NOT FOUND (404) - JAJ MOTOS
-   ================================ */
-
 :host {
   display: block;
   width: 100%;
   min-height: 100vh;
-  background-color: #0D0D0D !important;
+  background-color: transparent !important;
   box-sizing: border-box;
 }
 
 .container-fluid {
-  background-color: #0D0D0D !important;
+  background-color: transparent !important;
   padding: 40px 20px;
 }
 
-/* ================================
-   ÍCONO SUPERIOR
-   ================================ */
 .icono-superior {
   font-size: 4rem;
   color: #C8102E;
@@ -31,9 +24,6 @@
   50% { transform: translateY(-10px); }
 }
 
-/* ================================
-   CÓDIGO 404 GIGANTE
-   ================================ */
 .error-codigo {
   color: #C8102E !important;
   font-family: 'Barlow Condensed', sans-serif;
@@ -53,9 +43,6 @@
   50% { text-shadow: 0 0 40px rgba(200, 16, 46, 0.8), 0 0 80px rgba(200, 16, 46, 0.5); }
 }
 
-/* ================================
-   LÍNEA DECORATIVA
-   ================================ */
 .error-linea {
   width: 100px;
   height: 4px;
@@ -64,9 +51,6 @@
   border-radius: 2px;
 }
 
-/* ================================
-   TÍTULO Y TEXTO
-   ================================ */
 .error-titulo {
   color: #FFFFFF !important;
   font-family: 'Barlow Condensed', sans-serif;
@@ -90,9 +74,6 @@
   font-weight: 700;
 }
 
-/* ================================
-   BOTONES
-   ================================ */
 .error-botones {
   display: flex;
   justify-content: center;
@@ -141,9 +122,6 @@
   box-shadow: 0 10px 25px rgba(200, 16, 46, 0.4);
 }
 
-/* ================================
-   SUGERENCIAS DE RUTAS
-   ================================ */
 .sugerencias {
   border-top: 1px solid #2a2a2a;
   padding-top: 2rem;
@@ -190,9 +168,6 @@
   font-size: 1rem;
 }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
 @media (max-width: 768px) {
   .error-codigo {
     font-size: 6rem;

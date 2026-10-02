@@ -1,0 +1,18 @@
+.route-container {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 200px); 
+  overflow-x: hidden;
+}
+
+.route-container > * {
+  display: block;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-container * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

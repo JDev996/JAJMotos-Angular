@@ -1,3 +1,7 @@
 <app-navegador></app-navegador>
-<router-outlet />
+
+<main [@routeAnimations]="prepareRoute(outlet)" class="route-container">
+  <router-outlet #outlet="outlet"></router-outlet>
+</main>
+
 <app-footer></app-footer>
