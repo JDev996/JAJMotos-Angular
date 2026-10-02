@@ -1,22 +1,10 @@
-.mensajesChat {
-  height: 320px;
-  overflow-y: auto;
+
+
+.tarjetaMotero {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.burbujaBot,
-.burbujaMotero {
-  padding: 8px 12px;
-  border-radius: 12px;
-  margin-bottom: 8px;
-  max-width: 85%;
-  width: fit-content;
-}
-
-.burbujaBot {
-  background-color: var(--color-tarjetas);
-}
-
-.burbujaMotero {
-  background-color: var(--color-botones-links);
-  margin-left: auto;
+.tarjetaMotero:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
 }

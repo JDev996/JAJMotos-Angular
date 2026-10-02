@@ -1,5 +1,5 @@
 .fotoCarrusel {
-  height: 80vh;
+  height: 60vh;
   object-fit: cover;
   filter: brightness(0.45);
 }
@@ -63,4 +63,32 @@
     animation: none;
     opacity: 1;
   }
+}
+
+.cajaMarca {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cajaMarca:hover {
+  transform: scale(1.09);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+}
+
+.tarjetaNoticia {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tarjetaNoticia:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+}
+
+.seccionNosotros {
+  background-image: linear-gradient(rgba(13, 13, 13, 0.8), rgba(13, 13, 13, 0.8)), url('/img/carrusel/moto5.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.textoNosotros {
+  max-width: 640px;
 }
