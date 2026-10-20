@@ -42,17 +42,24 @@
       <p class="text-muted">Ingresa a tu cuenta</p>
     </div>
 
-    <form>
+    <form [formGroup]="credentialsForm" (ngSubmit)="handleSubmit()" novalidate>
       
       <div class="mb-3">
-        <label for="email" class="form-label">Correo Electrónico</label>
+        <label for="correo" class="form-label">Correo Electrónico</label>
         <input 
           type="email" 
           class="form-control" 
-          id="email" 
-          name="email"
+          id="correo"
+          formControlName="correo"
           placeholder="ejemplo@correo.com"
-          required>
+          autocomplete="email"
+          [class.is-invalid]="credentialsForm.controls.correo.touched && credentialsForm.controls.correo.invalid"
+          aria-describedby="correo-error">
+        @if (credentialsForm.controls.correo.touched && credentialsForm.controls.correo.invalid) {
+          <div id="correo-error" class="invalid-feedback">
+            El correo electrónico es obligatorio.
+          </div>
+        }
       </div>
 
       <div class="mb-4">
@@ -61,20 +68,28 @@
           type="password" 
           class="form-control" 
           id="password" 
-          name="password"
+          formControlName="password"
           placeholder="********"
-          required>
+          autocomplete="current-password"
+          [class.is-invalid]="credentialsForm.controls.password.touched && credentialsForm.controls.password.invalid"
+          aria-describedby="password-error">
+        @if (credentialsForm.controls.password.touched && credentialsForm.controls.password.invalid) {
+          <div id="password-error" class="invalid-feedback">
+            La contraseña es obligatoria.
+          </div>
+        }
       </div>
+
+      @if (loginError) {
+        <div class="alert alert-danger" role="alert" aria-live="polite">
+          {{ loginError }}
+        </div>
+      }
 
       <div class="d-grid gap-2">
-        <a routerLink="/home" class="btn btn-primary btn-lg">
-          Iniciar Sesión
-        </a>
-      </div>
-
-      <div class="text-center mt-3">
-        <a routerLink="/contacto" class="text-decoration-none small text-secondary">
-        </a>
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Ingresando...' : 'Iniciar Sesión' }}
+        </button>
       </div>
       
       <div class="text-center mt-2">

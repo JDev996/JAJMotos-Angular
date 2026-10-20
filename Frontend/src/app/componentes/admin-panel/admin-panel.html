@@ -1,0 +1,33 @@
+<main class="admin-layout">
+  <aside class="admin-sidebar" aria-label="Menú de administración">
+    <h1 class="admin-brand">Administración</h1>
+
+    <nav class="nav flex-column gap-2" aria-label="Secciones">
+      @for (section of sections; track section) {
+        <button
+          type="button"
+          class="nav-link text-start"
+          [class.active]="activeSection === section"
+          [attr.aria-current]="activeSection === section ? 'page' : null"
+          (click)="selectSection(section)"
+        >
+          {{ section }}
+        </button>
+      }
+    </nav>
+
+    <button type="button" class="btn btn-outline-light logout-button" (click)="logout()">
+      Cerrar sesión
+    </button>
+  </aside>
+
+  <section class="admin-content" aria-live="polite">
+    <p class="text-uppercase text-secondary small mb-2">Panel de administración</p>
+    <h2>{{ activeSection }}</h2>
+    <div class="admin-placeholder">
+      <p class="mb-0">
+        Desde aquí podrás gestionar {{ activeSection.toLowerCase() }}.
+      </p>
+    </div>
+  </section>
+</main>

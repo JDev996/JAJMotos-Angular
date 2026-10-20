@@ -1,0 +1,119 @@
+<main class="user-panel">
+  <header class="garage-hero">
+    <div>
+      <p class="eyebrow">JAJ MOTOS · MI ESPACIO</p>
+      <h1>Bienvenido a tu Garaje</h1>
+      <p class="hero-copy">Explora motos y repuestos, y guarda tus favoritos para tenerlos siempre a mano.</p>
+    </div>
+    <button type="button" class="btn btn-outline-light" (click)="logout()">
+      Cerrar sesión
+    </button>
+  </header>
+
+  <section class="catalog-section" aria-labelledby="motos-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">ENCUENTRA TU PRÓXIMA RUTA</p>
+        <h2 id="motos-title">Catálogo de Motos</h2>
+      </div>
+      <span class="section-count">{{ motos.length }} modelos</span>
+    </div>
+
+    <div class="catalog-grid">
+      @for (moto of motos; track moto.id) {
+        <article class="card catalog-card">
+          <img class="card-img-top" [src]="moto.image" [alt]="moto.brand + ' ' + moto.name" />
+          <div class="card-body">
+            <p class="item-brand">{{ moto.brand }}</p>
+            <h3 class="card-title">{{ moto.name }}</h3>
+            <p class="item-price">{{ moto.price | currency:'COP':'symbol-narrow':'1.0-0':'es-CO' }}</p>
+            <button
+              type="button"
+              class="btn favorite-button"
+              [class.is-favorite]="isFavorite(moto.id)"
+              [attr.aria-pressed]="isFavorite(moto.id)"
+              (click)="toggleFavorite(moto)"
+            >
+              {{ isFavorite(moto.id) ? '♥ Guardada en mi garaje' : '♡ Guardar en mi garaje' }}
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="catalog-section" aria-labelledby="repuestos-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">MANTÉN TU MOTO A PUNTO</p>
+        <h2 id="repuestos-title">Catálogo de Repuestos</h2>
+      </div>
+      <span class="section-count">{{ repuestos.length }} productos</span>
+    </div>
+
+    <div class="catalog-grid">
+      @for (repuesto of repuestos; track repuesto.id) {
+        <article class="card catalog-card">
+          <img class="card-img-top" [src]="repuesto.image" [alt]="repuesto.name" />
+          <div class="card-body">
+            <p class="item-brand">{{ repuesto.brand }}</p>
+            <h3 class="card-title">{{ repuesto.name }}</h3>
+            <p class="item-price">{{ repuesto.price | currency:'COP':'symbol-narrow':'1.0-0':'es-CO' }}</p>
+            <button
+              type="button"
+              class="btn favorite-button"
+              [class.is-favorite]="isFavorite(repuesto.id)"
+              [attr.aria-pressed]="isFavorite(repuesto.id)"
+              (click)="toggleFavorite(repuesto)"
+            >
+              {{ isFavorite(repuesto.id) ? '♥ Guardado en mis favoritos' : '♡ Guardar en favoritos' }}
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="favorites-section" aria-labelledby="favorites-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">TU SELECCIÓN PERSONAL</p>
+        <h2 id="favorites-title">Mi Garaje / Mis Favoritos</h2>
+      </div>
+      <span class="section-count">{{ favoriteItems.length }} guardados</span>
+    </div>
+
+    @if (favoritesError) {
+      <p class="alert alert-warning" role="alert">{{ favoritesError }}</p>
+    }
+
+    @if (favoriteItems.length > 0) {
+      <div class="favorites-list">
+        @for (item of favoriteItems; track item.id) {
+          <article class="favorite-item">
+            <img [src]="item.image" [alt]="item.name" />
+            <div class="favorite-details">
+              <span class="item-brand">{{ item.type }} · {{ item.brand }}</span>
+              <h3>{{ item.name }}</h3>
+              <p class="item-price">{{ item.price | currency:'COP':'symbol-narrow':'1.0-0':'es-CO' }}</p>
+            </div>
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              [attr.aria-label]="'Quitar ' + item.name + ' de favoritos'"
+              (click)="toggleFavorite(item)"
+            >
+              Quitar
+            </button>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-favorites">
+        <span aria-hidden="true">♡</span>
+        <h3>Tu garaje está esperando</h3>
+        <p>Guarda una moto o un repuesto del catálogo y aparecerá aquí.</p>
+      </div>
+    }
+  </section>
+</main>
