@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,7 +7,6 @@ import {
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Credential } from '../../interfaces/credential';
 import { LoginResponse, LoginService } from '../../services/login-service';
@@ -42,6 +41,7 @@ function isLoginResponse(response: unknown): response is LoginResponse {
 export class Login {
   private readonly loginService = inject(LoginService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly credentialsForm = new FormGroup({
     correo: new FormControl('', {
@@ -54,22 +54,22 @@ export class Login {
     }),
   });
 
-  loginError = '';
-  isSubmitting = false;
+  errorMensaje = '';
+  isLoading = false;
 
   handleSubmit(): void {
-    this.loginError = '';
+    this.errorMensaje = '';
 
     if (this.credentialsForm.invalid) {
       this.credentialsForm.markAllAsTouched();
-      this.loginError = 'Completa el correo y la contraseña.';
+      this.errorMensaje = 'Completa el correo y la contraseña.';
       return;
     }
 
     const { correo, password } = this.credentialsForm.getRawValue();
 
     if (typeof correo !== 'string' || typeof password !== 'string') {
-      this.loginError = 'El correo y la contraseña deben ser texto.';
+      this.errorMensaje = 'El correo y la contraseña deben ser texto.';
       return;
     }
 
@@ -79,35 +79,36 @@ export class Login {
     };
 
     if (!credential.correo) {
-      this.loginError = 'Ingresa tu correo electrónico.';
+      this.errorMensaje = 'Ingresa tu correo electrónico.';
       this.credentialsForm.controls.correo.markAsTouched();
       return;
     }
 
-    this.isSubmitting = true;
+    this.isLoading = true;
 
     this.loginService
       .login(credential)
-      .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
         next: (response) => {
+          this.isLoading = false;
+
           if (!isLoginResponse(response)) {
-            this.loginError = 'El servidor devolvió una respuesta no válida.';
+            this.showError('El servidor devolvió una respuesta no válida.');
             return;
           }
 
           if (response.resultado === 'mal') {
-            this.loginError = response.mensaje;
+            this.showError(response.mensaje);
             return;
           }
 
           if (!response.datos.trim()) {
-            this.loginError = 'El servidor no devolvió un token válido.';
+            this.showError('El servidor no devolvió un token válido.');
             return;
           }
 
           if (typeof window === 'undefined') {
-            this.loginError = 'No se puede guardar la sesión en este entorno.';
+            this.showError('No se puede guardar la sesión en este entorno.');
             return;
           }
 
@@ -125,21 +126,41 @@ export class Login {
             window.localStorage.setItem('token', response.datos);
             void this.router.navigate([destination]);
           } catch {
-            this.loginError = 'El servidor devolvió un token no válido.';
+            this.showError('El servidor devolvió un token no válido.');
           }
         },
-        error: (error: unknown) => {
+        error: (error: HttpErrorResponse) => {
+          const body: unknown = error.error;
+          let backendMessage: string | null = null;
+
           if (
-            error instanceof HttpErrorResponse &&
-            isLoginResponse(error.error) &&
-            error.error.resultado === 'mal'
+            typeof body === 'object' &&
+            body !== null &&
+            'resultado' in body &&
+            body.resultado === 'mal' &&
+            'mensaje' in body &&
+            typeof body.mensaje === 'string'
           ) {
-            this.loginError = error.error.mensaje;
-            return;
+            backendMessage = body.mensaje;
+          } else if (
+            typeof body === 'object' &&
+            body !== null &&
+            'mensaje' in body &&
+            typeof body.mensaje === 'string'
+          ) {
+            backendMessage = body.mensaje;
           }
 
-          this.loginError = 'No se pudo conectar con el servidor. Inténtalo de nuevo.';
+          this.errorMensaje = backendMessage ?? 'Error al conectar con el servidor';
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
+  }
+
+  private showError(message: string): void {
+    this.errorMensaje = message;
+    this.isLoading = false;
+    this.cdr.detectChanges();
   }
 }

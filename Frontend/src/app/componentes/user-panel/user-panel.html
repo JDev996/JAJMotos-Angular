@@ -2,7 +2,7 @@
   <header class="garage-hero">
     <div>
       <p class="eyebrow">JAJ MOTOS · MI ESPACIO</p>
-      <h1>Bienvenido a tu Garaje</h1>
+      <h1>Bienvenido{{ usuarioActual?.nombre ? ', ' + usuarioActual.nombre : ' a tu Garaje' }}</h1>
       <p class="hero-copy">Explora motos y repuestos, y guarda tus favoritos para tenerlos siempre a mano.</p>
     </div>
     <button type="button" class="btn btn-outline-light" (click)="logout()">

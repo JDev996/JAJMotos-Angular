@@ -80,15 +80,15 @@
         }
       </div>
 
-      @if (loginError) {
+      @if (errorMensaje) {
         <div class="alert alert-danger" role="alert" aria-live="polite">
-          {{ loginError }}
+          {{ errorMensaje }}
         </div>
       }
 
       <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Ingresando...' : 'Iniciar Sesión' }}
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading">
+          {{ isLoading ? 'INGRESANDO...' : 'Ingresar' }}
         </button>
       </div>
       
