@@ -1,0 +1,73 @@
+:host {
+  display: block;
+  min-height: 70vh;
+  background: #f4f5f7;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: 70vh;
+}
+
+.admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 1.25rem;
+  color: #fff;
+  background: #1a1a1a;
+}
+
+.admin-brand {
+  margin: 0;
+  color: #c8102e;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.admin-sidebar .nav-link {
+  color: #ddd;
+  border: 0;
+  border-radius: 0.5rem;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+  color: #fff;
+  background: #c8102e;
+}
+
+.logout-button {
+  margin-top: auto;
+}
+
+.admin-content {
+  padding: clamp(1.5rem, 5vw, 4rem);
+}
+
+.admin-content h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.admin-placeholder {
+  padding: 2rem;
+  border: 1px solid #e1e3e6;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+@media (max-width: 640px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    gap: 1rem;
+  }
+
+  .logout-button {
+    margin-top: 0;
+  }
+}

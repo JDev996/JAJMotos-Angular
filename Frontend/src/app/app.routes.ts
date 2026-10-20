@@ -7,10 +7,15 @@ import { Contacto } from './componentes/contacto/contacto';
 import { Asesor } from './componentes/asesor/asesor';
 import { Login } from './componentes/login/login';
 import { NotFound } from './componentes/not-found/not-found';
+import { AdminPanelComponent } from './componentes/admin-panel/admin-panel';
+import { UserPanelComponent } from './componentes/user-panel/user-panel';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'home',           title: 'Inicio',         component: Home,           data: { animation: 'Home' } },
-  { path: 'productos',      title: 'Productos',      component: Productos,      data: { animation: 'Productos' } },
+  { path: 'productos',      title: 'Productos',      component: Productos,      canActivate: [authGuard], data: { animation: 'Productos' } },
+  { path: 'admin',          title: 'Administración', component: AdminPanelComponent, canActivate: [authGuard], data: { animation: 'Admin', role: 'admin' } },
+  { path: 'user-panel',     title: 'Mi garaje',      component: UserPanelComponent, canActivate: [authGuard], data: { animation: 'UserPanel', role: 'user' } },
   { path: 'distribuidores', title: 'Distribuidores', component: Distribuidores, data: { animation: 'Distribuidores' } },
   { path: 'nosotros',       title: 'Nosotros',       component: Nosotros,       data: { animation: 'Nosotros' } },
   { path: 'contacto',       title: 'Contacto',       component: Contacto,       data: { animation: 'Contacto' } },
