@@ -24,10 +24,118 @@
   <section class="admin-content" aria-live="polite">
     <p class="text-uppercase text-secondary small mb-2">Panel de administración</p>
     <h2>{{ activeSection }}</h2>
-    <div class="admin-placeholder">
-      <p class="mb-0">
-        Desde aquí podrás gestionar {{ activeSection.toLowerCase() }}.
-      </p>
-    </div>
+    @if (activeSection === 'Usuarios') {
+      <div class="admin-placeholder">
+        <h3 class="h5 mb-3">Crear usuario</h3>
+        <form [formGroup]="usuarioForm" (ngSubmit)="crearUsuario()" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input id="nombre" type="text" class="form-control" formControlName="nombre" />
+              @if (usuarioForm.controls.nombre.touched && usuarioForm.controls.nombre.invalid) {
+                <small class="text-danger">Ingresa el nombre.</small>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label for="apellido" class="form-label">Apellido</label>
+              <input id="apellido" type="text" class="form-control" formControlName="apellido" />
+              @if (usuarioForm.controls.apellido.touched && usuarioForm.controls.apellido.invalid) {
+                <small class="text-danger">Ingresa el apellido.</small>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label for="correo" class="form-label">Correo</label>
+              <input id="correo" type="email" class="form-control" formControlName="correo" />
+              @if (usuarioForm.controls.correo.touched && usuarioForm.controls.correo.invalid) {
+                <small class="text-danger">Ingresa un correo válido.</small>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label for="password" class="form-label">Contraseña</label>
+              <input id="password" type="password" class="form-control" formControlName="password" />
+              @if (usuarioForm.controls.password.touched && usuarioForm.controls.password.invalid) {
+                <small class="text-danger">
+                  Usa de 8 a 15 caracteres, con mayúscula, minúscula, número y símbolo.
+                </small>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label for="edad" class="form-label">Edad</label>
+              <input id="edad" type="number" min="0" class="form-control" formControlName="edad" />
+              @if (usuarioForm.controls.edad.touched && usuarioForm.controls.edad.invalid) {
+                <small class="text-danger">Ingresa una edad válida.</small>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label for="rol" class="form-label">Rol</label>
+              <select id="rol" class="form-select" formControlName="rol">
+                <option value="usuario">Usuario</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label for="foto" class="form-label">Foto</label>
+              <input
+                #fotoInput
+                id="foto"
+                type="file"
+                class="form-control"
+                accept="image/*"
+                (change)="onFotoSeleccionada($event)"
+              />
+              @if (usuarioForm.controls.foto.touched && usuarioForm.controls.foto.invalid) {
+                <small class="text-danger">Selecciona una imagen.</small>
+              }
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-danger mt-4" [disabled]="creandoUsuario">
+            {{ creandoUsuario ? 'Creando...' : 'Crear usuario' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="admin-placeholder mt-4">
+        <h3 class="h5 mb-3">Usuarios registrados</h3>
+        @if (usuarios.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Correo</th>
+                  <th scope="col">Edad</th>
+                  <th scope="col">Rol</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (usuario of usuarios; track usuario._id ?? usuario.correo) {
+                  <tr>
+                    <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                    <td>{{ usuario.correo }}</td>
+                    <td>{{ usuario.edad ?? '—' }}</td>
+                    <td>{{ usuario.rol }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="mb-0">No hay usuarios para mostrar.</p>
+        }
+      </div>
+    } @else {
+      <div class="admin-placeholder">
+        <p class="mb-0">
+          Desde aquí podrás gestionar {{ activeSection.toLowerCase() }}.
+        </p>
+      </div>
+    }
   </section>
 </main>

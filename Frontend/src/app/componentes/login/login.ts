@@ -151,6 +151,8 @@ export class Login {
             backendMessage = body.mensaje;
           }
 
+          console.error('Error en login:', error);
+          console.log('Mensaje del backend:', backendMessage);
           this.errorMensaje = backendMessage ?? 'Error al conectar con el servidor';
           this.isLoading = false;
           this.cdr.detectChanges();
