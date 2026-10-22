@@ -1,0 +1,41 @@
+<main class="recover-page">
+  <section class="card shadow-lg p-4" aria-labelledby="recover-title">
+    <header class="text-center mb-4">
+      <h1 id="recover-title" class="h2 fw-bold">JAJ MOTOS</h1>
+      <p class="text-muted">Recupera el acceso a tu cuenta</p>
+    </header>
+
+    <form [formGroup]="recoverForm" (ngSubmit)="handleRecover()" novalidate>
+      <div class="mb-3">
+        <label for="correo" class="form-label">Correo electrónico</label>
+        <input
+          id="correo"
+          class="form-control"
+          type="email"
+          formControlName="correo"
+          placeholder="ejemplo@correo.com"
+          autocomplete="email"
+          [class.is-invalid]="recoverForm.controls.correo.touched && recoverForm.controls.correo.invalid"
+          aria-describedby="correo-error">
+        @if (recoverForm.controls.correo.touched && recoverForm.controls.correo.invalid) {
+          <div id="correo-error" class="invalid-feedback">
+            Ingresa un correo electrónico válido.
+          </div>
+        }
+      </div>
+
+      @if (mensaje()) {
+        <div class="alert alert-info" role="status" aria-live="polite">
+          {{ mensaje() }}
+        </div>
+      }
+
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+          {{ isLoading ? 'ENVIANDO...' : 'Enviar contraseña temporal' }}
+        </button>
+        <a class="btn btn-outline-secondary" routerLink="/login">Volver al inicio de sesión</a>
+      </div>
+    </form>
+  </section>
+</main>

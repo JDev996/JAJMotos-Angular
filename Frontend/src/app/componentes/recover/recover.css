@@ -1,0 +1,50 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  padding: 60px 20px;
+  background: #111;
+}
+
+.recover-page {
+  display: grid;
+  min-height: calc(100vh - 120px);
+  place-items: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-top: 4px solid #c8102e;
+  border-radius: 16px;
+  box-shadow: 0 15px 50px rgb(0 0 0 / 70%);
+}
+
+h1 {
+  color: #c8102e;
+  letter-spacing: 3px;
+}
+
+.text-muted,
+.form-label {
+  color: #b3b3b3 !important;
+}
+
+.form-control {
+  color: #fff;
+  background: #0d0d0d;
+  border-color: #2a2a2a;
+}
+
+.form-control:focus {
+  color: #fff;
+  background: #0d0d0d;
+  border-color: #c8102e;
+  box-shadow: 0 0 0 0.2rem rgb(200 16 46 / 25%);
+}
+
+.btn-primary {
+  background: #c8102e;
+  border-color: #c8102e;
+}
