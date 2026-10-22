@@ -1,7 +1,65 @@
 import { uploadImage } from '../middleware/upload.js';
 import modelUsuario from '../models/modelUsuario.js';
+import { randomBytes } from 'node:crypto';
+import bcrypt from 'bcryptjs';
+import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+
+const generarContrasenaAleatoria = () => {
+    return randomBytes(6).toString('hex');
+};
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const correo = typeof req.body?.correo === 'string'
+            ? req.body.correo.trim().toLowerCase()
+            : '';
+        const user = await modelUsuario.findOne({ correo });
+
+        if (!user) {
+            return res.status(400).json({
+                result: 'mistake',
+                message: 'El correo no se encuentra registrado',
+            });
+        }
+
+        const newPass = generarContrasenaAleatoria();
+        const hashPassword = await bcrypt.hash(newPass, 10);
+
+        user.password = hashPassword;
+        await user.save();
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_NODE,
+                pass: process.env.PASS_NODE,
+            },
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_NODE,
+            to: user.correo,
+            subject: 'Recuperación de contraseña - JAJ Motos',
+            text: `Tu nueva contraseña temporal es: ${newPass}`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        return res.json({
+            result: 'fine',
+            message: 'Se ha enviado una nueva contraseña al correo registrado.',
+        });
+    } catch (error) {
+        console.error('Error al recuperar la contraseña:', error);
+        return res.status(500).json({
+            result: 'mistake',
+            message: 'Error interno en el servidor',
+            error: error.message,
+        });
+    }
+};
 
 const usuarioPublico = (usuario) => {
     const datos = usuario.toObject();

@@ -6,6 +6,7 @@ import { Nosotros } from './componentes/nosotros/nosotros';
 import { Contacto } from './componentes/contacto/contacto';
 import { Asesor } from './componentes/asesor/asesor';
 import { Login } from './componentes/login/login';
+import { Recover } from './componentes/recover/recover';
 import { NotFound } from './componentes/not-found/not-found';
 import { AdminPanelComponent } from './componentes/admin-panel/admin-panel';
 import { UserPanelComponent } from './componentes/user-panel/user-panel';
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'contacto',       title: 'Contacto',       component: Contacto,       data: { animation: 'Contacto' } },
   { path: 'asesor',         title: 'Asesor',         component: Asesor,         data: { animation: 'Asesor' } },
   { path: 'login',          title: 'Login',          component: Login,          data: { animation: 'Login' } },
+  { path: 'recover',        title: 'Recuperar contraseña', component: Recover, data: { animation: 'Recover' } },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**',             title: 'No encontrado',  component: NotFound,       data: { animation: 'NotFound' } },
 ];
