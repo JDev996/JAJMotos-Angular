@@ -1,0 +1,227 @@
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 60px 20px;
+  background-color: transparent !important;
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  padding: 0;
+  background-color: transparent !important;
+}
+
+.card {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2a2a2a !important;
+  border-top: 4px solid #C8102E !important;
+  border-radius: 16px !important;
+  width: 100%;
+  max-width: 560px;
+  padding: 40px 35px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(200, 16, 46, 0.2) !important;
+}
+
+.card h2 {
+  color: #C8102E !important;
+  letter-spacing: 3px;
+  font-size: 1.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(200, 16, 46, 0.3);
+}
+
+.card p.text-muted {
+  color: #B3B3B3 !important;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  color: #FFFFFF !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  background-color: #0D0D0D !important;
+  border: 1px solid #2a2a2a !important;
+  color: #FFFFFF !important;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  background-color: #0D0D0D !important;
+  border-color: #C8102E !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 0.2rem rgba(200, 16, 46, 0.25) !important;
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: #555555 !important;
+  font-style: italic;
+}
+
+.btn-primary {
+  background-color: #C8102E !important;
+  border: none !important;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 13px;
+  color: #FFFFFF !important;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #A00D24 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(200, 16, 46, 0.45);
+  color: #FFFFFF !important;
+}
+
+.btn-primary:active,
+.btn-primary:focus {
+  background-color: #A00D24 !important;
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(200, 16, 46, 0.3);
+}
+
+.card a.text-secondary {
+  color: #B3B3B3 !important;
+  transition: color 0.3s ease, letter-spacing 0.3s ease;
+  font-size: 0.85rem;
+}
+
+.card a.text-secondary:hover {
+  color: #C8102E !important;
+  letter-spacing: 1px;
+}
+
+.pista {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 110px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pista::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 16, 46, 0.6), transparent);
+}
+
+.moto {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 170px;
+  animation:
+    pasar 5s linear infinite,
+    vibrar 0.12s ease-in-out infinite alternate;
+}
+
+@keyframes pasar {
+  0%   { translate: -220px 0; }
+  55%  { translate: calc(100vw + 40px) 0; }
+  100% { translate: calc(100vw + 40px) 0; }
+}
+
+@keyframes vibrar {
+  from { transform: translateY(0); }
+  to   { transform: translateY(1.5px); }
+}
+
+.rueda {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: girar 0.3s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+.estela {
+  animation: parpadeo 0.2s ease-in-out infinite alternate;
+}
+
+@keyframes parpadeo {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+.farola {
+  filter: drop-shadow(0 0 4px #fff6c8);
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 40px 15px;
+  }
+
+  .card {
+    padding: 30px 20px;
+    border-radius: 12px !important;
+  }
+
+  .card h2 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pista { display: none; }
+}
+
+.container-fluid {
+  align-items: flex-start;
+  min-height: auto;
+  padding-top: 70px;
+}
+
+.form-text {
+  color: #B3B3B3 !important;
+  font-size: 0.8rem;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.15);
+  border-color: rgba(25, 135, 84, 0.5);
+  color: #75b798;
+}
