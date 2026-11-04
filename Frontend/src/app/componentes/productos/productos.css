@@ -448,3 +448,18 @@
     background-color: var(--color-botones-links);
     color: var(--color-texto);
 }
+/* ===== Estados del catálogo (cargando / error) ===== */
+.catalogo__estado {
+    text-align: center;
+    color: var(--color-texto-secundario);
+    padding: 2rem 1rem;
+}
+
+.catalogo__estado--error {
+    color: var(--color-dorado);
+}
+
+.producto-card__boton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
