@@ -20,3 +20,7 @@ export const uploadSingleImage = multer({
 }).single('Foto'); 
 
 export const uploadImage = uploadSingleImage;
+
+export const uploadProductImage = multer({
+    storage
+}).single('imagen');

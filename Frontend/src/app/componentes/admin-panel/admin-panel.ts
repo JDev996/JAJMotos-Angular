@@ -7,6 +7,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CrudProductos } from '../admin/crud-productos/crud-productos';
+import { CrudMotos } from '../admin/crud-motos/crud-motos';
+import { CrudRespuestos } from '../admin/crud-respuestos/crud-respuestos';
 
 const adminSections = ['Usuarios', 'Productos', 'Motos', 'Repuestos'] as const;
 
@@ -45,7 +48,7 @@ function isUsuario(value: unknown): value is Usuario {
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CrudProductos, CrudMotos, CrudRespuestos],
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.css',
 })
@@ -81,7 +84,7 @@ export class AdminPanelComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/^\d+$/), Validators.min(0)],
     }),
-    rol: new FormControl('usuario', {
+    rol: new FormControl('user', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -198,7 +201,7 @@ export class AdminPanelComponent implements OnInit {
               ? response.mensaje
               : 'Usuario creado satisfactoriamente.',
           );
-          this.usuarioForm.reset({ edad: '', rol: 'usuario' });
+          this.usuarioForm.reset({ edad: '', rol: 'user' });
           if (this.fotoInput) {
             this.fotoInput.nativeElement.value = '';
           }
@@ -239,6 +242,10 @@ export class AdminPanelComponent implements OnInit {
 
   selectSection(section: AdminSection): void {
     this.activeSection = section;
+  }
+
+  isSection(section: AdminSection): boolean {
+    return this.activeSection === section;
   }
 
   logout(): void {

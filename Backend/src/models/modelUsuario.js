@@ -27,8 +27,8 @@ const esquemaUsuario = new Schema({
     },
     rol: {
         type: String,
-        enum: ['admin', 'usuario'],
-        default: 'usuario'
+        enum: ['admin', 'usuario', 'user'],
+        default: 'user'
     },
     password: {
         type: String,

@@ -1,0 +1,30 @@
+<button (click)="prepararCrear()" class="btn btn-danger admin-add-button">Nuevo producto</button>
+@if (mostrarFormulario()) {
+  <div class="mt-3 card p-3 shadow-sm">
+    <form (ngSubmit)="modo() == 'crear' ? crearProducto() : actualizarProducto()" enctype="multipart/form-data">
+      <div class="mb-2"><label class="form-label">Modelo:</label><input type="text" class="form-control" [(ngModel)]="productoForm.modelo" name="modelo" required /></div>
+      <div class="mb-2"><label class="form-label">Descripción:</label><input type="text" class="form-control" [(ngModel)]="productoForm.descripcion" name="descripcion" required /></div>
+      <div class="mb-2"><label class="form-label">Categoria:</label><select class="form-select" [(ngModel)]="productoForm.categoria" name="categoria" required><option value="" disabled>Selecciona una categoria</option><option value="termos">Termos</option><option value="sombrillas">Sombrillas</option><option value="mugs">Mugs</option><option value="joyeria">Joyeria</option></select></div>
+      <div class="mb-2"><label class="form-label">Color:</label><input type="text" class="form-control" [(ngModel)]="productoForm.color" name="color" required /></div>
+      <div class="mb-2"><label class="form-label">Precio:</label><input type="number" class="form-control" [(ngModel)]="productoForm.precio" name="precio" required min="0" /></div>
+      <div class="mb-3"><label class="form-label">Imagen:</label><input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" /></div>
+      <div class="mt-2 d-flex gap-2"><button type="submit" class="btn btn-primary">{{ modo() === 'crear' ? 'Crear producto' : 'Actualizar producto' }}</button><button type="button" class="btn btn-secondary" (click)="cancelarFormulario()">Cancelar</button></div>
+    </form>
+  </div>
+}
+@if (productos().length === 0) {
+  <p class="mt-4 text-muted">No hay productos disponibles.</p>
+} @else {
+  <table class="table table-striped mt-4 align-middle">
+    <thead><tr><th>Imagen</th><th>Modelo</th><th>Descripción</th><th>Categoria</th><th>Precio</th><th>Color</th><th>Acciones</th></tr></thead>
+    <tbody>
+      @for (prod of productos(); track prod._id) {
+        <tr>
+          <td><img [src]="imagenBaseURL + prod.imagen" alt="Producto" width="80" /></td>
+          <td>{{ prod.modelo }}</td><td>{{ prod.descripcion }}</td><td><span class="badge bg-secondary">{{ prod.categoria }}</span></td><td>${{ prod.precio }}</td><td>{{ prod.color }}</td>
+          <td><button class="btn btn-warning me-2" (click)="seleccionarParaEditar(prod)">Editar</button><button class="btn btn-danger" (click)="eliminarProducto(prod._id!)">Eliminar</button></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
