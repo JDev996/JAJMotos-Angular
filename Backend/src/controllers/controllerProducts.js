@@ -13,7 +13,6 @@ const controllerProducts = {
                 descripcion: req.body.descripcion,
                 precio: req.body.precio,
                 color: req.body.color,
-                categoria: req.body.categoria,
                 imagen: req.file.filename,
             });
             return res.json({ result: 'fine', message: 'Producto creado', data: product });
@@ -24,8 +23,7 @@ const controllerProducts = {
 
     readProducts: async (req, res) => {
         try {
-            const filter = req.query.categoria ? { categoria: req.query.categoria } : {};
-            const products = await modelProducto.find(filter);
+            const products = await modelProducto.find();
             return res.json({ result: 'fine', message: 'Productos consultados', data: products });
         } catch (error) {
             return res.status(500).json({ result: 'mistake', message: 'Error al consultar productos', data: error.message });
@@ -43,7 +41,6 @@ const controllerProducts = {
                 descripcion: req.body.descripcion,
                 precio: req.body.precio,
                 color: req.body.color,
-                categoria: req.body.categoria,
                 imagen: req.file ? req.file.filename : existing.imagen,
             };
             const updated = await modelProducto.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });

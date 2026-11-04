@@ -16,6 +16,22 @@ referencia: {
     required: true,
 
 },
+categoria: {
+    type: String,
+    required: true,
+    trim: true,
+    enum: [
+        'Urbana / De trabajo',
+        'Scooters y MaxiScooters',
+        'Naked',
+        'Deportivas (Sport)',
+        'Trail / Adventure / Doble propósito',
+        'Cruiser y Chopper',
+        'Touring / Sport Touring',
+        'Enduro y Motocross',
+        'Eléctricas',
+    ],
+},
 cilindraje: {
     type: Number,
     required: true,
