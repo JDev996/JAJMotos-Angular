@@ -4,6 +4,7 @@ export interface Moto {
   modelo: string;
   marca: string;
   referencia: string;
+  categoria: string;
   cilindraje: number;
   precio: number;
   stock: number;

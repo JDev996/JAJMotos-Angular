@@ -18,10 +18,21 @@ export class CrudMotos implements OnInit {
   archivo = signal<File | null>(null);
   imagenBaseURL = 'http://localhost:8080/imagenes/';
   form: Moto = this.vacio();
+  categorias = [
+    'Urbana / De trabajo',
+    'Scooters y MaxiScooters',
+    'Naked',
+    'Deportivas (Sport)',
+    'Trail / Adventure / Doble propósito',
+    'Cruiser y Chopper',
+    'Touring / Sport Touring',
+    'Enduro y Motocross',
+    'Eléctricas',
+  ];
 
   ngOnInit(): void { this.obtener(); }
   vacio(): Moto {
-    return { modelo: '', marca: '', referencia: '', cilindraje: 0, precio: 0, stock: 0, Foto: '' };
+    return { modelo: '', marca: '', referencia: '', categoria: '', cilindraje: 0, precio: 0, stock: 0, Foto: '' };
   }
   obtener(): void {
     this.service.getAll().subscribe({
@@ -43,6 +54,7 @@ export class CrudMotos implements OnInit {
     data.append('modelo', this.form.modelo);
     data.append('marca', this.form.marca);
     data.append('referencia', this.form.referencia);
+    data.append('categoria', this.form.categoria);
     data.append('cilindraje', this.form.cilindraje.toString());
     data.append('precio', this.form.precio.toString());
     data.append('stock', this.form.stock.toString());
