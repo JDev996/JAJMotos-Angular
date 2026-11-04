@@ -28,7 +28,7 @@ const controllerRepuestos = {
                     referencia: req.body.referencia,
                     precio: req.body.precio,
                     stock: req.body.stock,
-                    foto: req.file.filename
+                    Foto: req.file.filename
                 });
 
                 const savedRepuesto = await newRepuesto.save();
@@ -123,7 +123,7 @@ const controllerRepuestos = {
                 referencia: req.body.referencia,
                 precio: req.body.precio,
                 stock: req.body.stock,
-                imagen: req.file ? req.file.filename : repuestoExistente.Foto,
+                Foto: req.file ? req.file.filename : repuestoExistente.Foto,
             };
 
             const repuestoActualizado = await modelRepuestos.findByIdAndUpdate(

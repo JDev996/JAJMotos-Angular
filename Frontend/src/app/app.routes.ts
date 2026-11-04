@@ -25,6 +25,7 @@ export const routes: Routes = [
   { path: 'login',          title: 'Login',          component: Login,          data: { animation: 'Login' } },
   { path: 'recover',        title: 'Recuperar contraseña', component: Recover, data: { animation: 'Recover' } },
   { path: 'registro',       title: 'Crear cuenta',   component: Registro,       data: { animation: 'Registro' } },
+  { path: 'register',       title: 'Crear cuenta',   component: Registro,       data: { animation: 'Registro' } },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**',             title: 'No encontrado',  component: NotFound,       data: { animation: 'NotFound' } },
 ];

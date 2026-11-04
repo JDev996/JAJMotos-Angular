@@ -1,0 +1,25 @@
+<p>crud-motos works!</p>
+<button type="button" class="btn btn-danger admin-add-button" (click)="nuevo()">Nueva moto</button>
+@if (formulario()) {
+  <div class="mt-3 card p-3 shadow-sm"><form (ngSubmit)="guardar()">
+    <div class="row g-2">
+      <div class="col-md-6"><label class="form-label">Modelo</label><input class="form-control" [(ngModel)]="form.modelo" name="modelo" required /></div>
+      <div class="col-md-6"><label class="form-label">Marca</label><input class="form-control" [(ngModel)]="form.marca" name="marca" required /></div>
+      <div class="col-md-6"><label class="form-label">Referencia</label><input class="form-control" [(ngModel)]="form.referencia" name="referencia" required /></div>
+      <div class="col-md-3"><label class="form-label">Cilindraje</label><input type="number" class="form-control" [(ngModel)]="form.cilindraje" name="cilindraje" min="0" required /></div>
+      <div class="col-md-3"><label class="form-label">Precio</label><input type="number" class="form-control" [(ngModel)]="form.precio" name="precio" min="0" required /></div>
+      <div class="col-md-3"><label class="form-label">Stock</label><input type="number" class="form-control" [(ngModel)]="form.stock" name="stock" min="0" required /></div>
+      <div class="col-md-9"><label class="form-label">Imagen</label><input type="file" class="form-control" accept="image/*" (change)="archivoSeleccionado($event)" /></div>
+    </div>
+    <div class="mt-3 d-flex gap-2"><button type="submit" class="btn btn-primary">{{ modo() === 'crear' ? 'Crear moto' : 'Actualizar moto' }}</button><button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button></div>
+  </form></div>
+}
+@if (motos().length === 0) { <p class="mt-4 text-muted">No hay motos disponibles.</p> } @else {
+  <div class="table-responsive"><table class="table table-striped mt-4 align-middle">
+    <thead><tr><th>Imagen</th><th>Modelo</th><th>Marca</th><th>Referencia</th><th>Cilindraje</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+    <tbody>@for (moto of motos(); track moto._id) {<tr>
+      <td><img [src]="imagenBaseURL + moto.Foto" alt="Moto" width="80" /></td><td>{{ moto.modelo }}</td><td>{{ moto.marca }}</td><td>{{ moto.referencia }}</td><td>{{ moto.cilindraje }}</td><td>${{ moto.precio }}</td><td>{{ moto.stock }}</td>
+      <td><button class="btn btn-warning me-2" (click)="editar(moto)">Editar</button><button class="btn btn-danger" (click)="eliminar(moto._id!)">Eliminar</button></td>
+    </tr>}</tbody>
+  </table></div>
+}

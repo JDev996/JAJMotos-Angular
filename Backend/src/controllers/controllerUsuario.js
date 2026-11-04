@@ -69,6 +69,58 @@ const usuarioPublico = (usuario) => {
 
 const contUsuario = {
 
+    registerPublic: async (req, res) => {
+        try {
+            const nombre = typeof req.body?.nombre === 'string' ? req.body.nombre.trim() : '';
+            const apellido = typeof req.body?.apellido === 'string' ? req.body.apellido.trim() : '';
+            const correo = typeof req.body?.correo === 'string'
+                ? req.body.correo.trim().toLowerCase()
+                : '';
+            const password = typeof req.body?.password === 'string' ? req.body.password : '';
+
+            if (!nombre || !apellido || !correo || !password) {
+                return res.status(400).json({
+                    resultado: 'mal',
+                    mensaje: 'Todos los campos obligatorios son requeridos',
+                    datos: null,
+                });
+            }
+
+            const existingUser = await modelUsuario.findOne({ correo });
+            if (existingUser) {
+                return res.status(409).json({
+                    resultado: 'mal',
+                    mensaje: 'El correo ya está registrado',
+                    datos: null,
+                });
+            }
+
+            const newUser = new modelUsuario({
+                nombre,
+                apellido,
+                correo,
+                edad: 0,
+                rol: 'user',
+                password,
+                Foto: 'default-user.png',
+            });
+
+            const savedUser = await newUser.save();
+            return res.status(201).json({
+                resultado: 'bien',
+                mensaje: 'Usuario registrado satisfactoriamente',
+                datos: usuarioPublico(savedUser),
+            });
+        } catch (error) {
+            console.error('Error en registro público:', error);
+            return res.status(500).json({
+                resultado: 'mal',
+                mensaje: 'Ocurrio un error registrando el usuario',
+                datos: null,
+            });
+        }
+    },
+
     readPerfil: async (req, res) => {
         try {
             const usuarioFound = await modelUsuario.findById(req.usuario.id);

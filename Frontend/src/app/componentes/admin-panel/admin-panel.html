@@ -24,7 +24,7 @@
   <section class="admin-content" aria-live="polite">
     <p class="text-uppercase text-secondary small mb-2">Panel de administración</p>
     <h2>{{ activeSection }}</h2>
-    @if (activeSection === 'Usuarios') {
+    @if (isSection('Usuarios')) {
       <div class="admin-placeholder">
         <h3 class="h5 mb-3">Crear usuario</h3>
         <form [formGroup]="usuarioForm" (ngSubmit)="crearUsuario()" novalidate>
@@ -74,7 +74,7 @@
             <div class="col-md-6">
               <label for="rol" class="form-label">Rol</label>
               <select id="rol" class="form-select" formControlName="rol">
-                <option value="usuario">Usuario</option>
+                <option value="user">Usuario</option>
                 <option value="admin">Administrador</option>
               </select>
             </div>
@@ -130,6 +130,12 @@
           <p class="mb-0">No hay usuarios para mostrar.</p>
         }
       </div>
+    } @else if (isSection('Productos')) {
+      <app-crud-productos></app-crud-productos>
+    } @else if (isSection('Motos')) {
+      <app-crud-motos></app-crud-motos>
+    } @else if (isSection('Repuestos')) {
+      <app-crud-respuestos></app-crud-respuestos>
     } @else {
       <div class="admin-placeholder">
         <p class="mb-0">
