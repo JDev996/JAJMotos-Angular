@@ -1,6 +1,5 @@
 :host {
   display: block;
-  background: #f5f6f8;
 }
 
 .user-panel {
@@ -16,11 +15,12 @@
   gap: 2rem;
   padding: clamp(2rem, 5vw, 4rem);
   color: #fff;
+  border: 1px solid #FFFFFF14;
   border-radius: 1.25rem;
   background:
     linear-gradient(100deg, rgba(15, 15, 15, 0.96), rgba(35, 13, 18, 0.86)),
     url('/img/carrusel/moto3.jpg') center 55% / cover;
-  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.45);
 }
 
 .garage-hero h1 {
@@ -32,12 +32,12 @@
 .hero-copy {
   max-width: 40rem;
   margin: 0.75rem 0 0;
-  color: #ddd;
+  color: var(--color-texto-secundario);
 }
 
 .eyebrow {
   margin-bottom: 0.5rem;
-  color: #c8102e;
+  color: var(--color-botones-links);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -62,7 +62,7 @@
 
 .section-heading h2 {
   margin: 0;
-  color: #1a1a1a;
+  color: var(--color-texto);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
 }
@@ -70,9 +70,10 @@
 .section-count {
   flex: 0 0 auto;
   padding: 0.4rem 0.75rem;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
+  border: 1px solid #FFFFFF14;
   border-radius: 999px;
-  background: #e9eaed;
+  background: var(--color-tarjetas);
   font-size: 0.85rem;
 }
 
@@ -84,28 +85,38 @@
 
 .catalog-card {
   overflow: hidden;
-  border: 1px solid #e6e7e9;
+  color: var(--color-texto);
+  border: 1px solid #FFFFFF14;
   border-radius: 1rem;
-  background: #fff;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  background: var(--color-tarjetas);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .catalog-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  border-color: rgba(200, 16, 46, 0.6);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(200, 16, 46, 0.15);
 }
 
 .catalog-card .card-img-top {
-  width: 100%;
+  width: calc(100% - 1.5rem);
   height: 190px;
+  margin: 0.75rem 0.75rem 0;
   padding: 0.75rem;
   object-fit: contain;
+  border-radius: 0.75rem;
   background: #fff;
+  transition: transform 0.45s ease;
+}
+
+.catalog-card:hover .card-img-top {
+  transform: scale(1.03);
 }
 
 .item-brand {
   margin: 0 0 0.3rem;
-  color: #c8102e;
+  color: var(--color-botones-links);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -114,27 +125,29 @@
 .catalog-card .card-title {
   min-height: 1.75rem;
   margin-bottom: 0.5rem;
+  color: var(--color-texto);
   font-size: 1.05rem;
   font-weight: 750;
 }
 
 .item-price {
   margin-bottom: 1rem;
-  color: #30343b;
+  color: var(--color-texto);
   font-size: 1.05rem;
   font-weight: 700;
 }
 
 .favorite-button {
   width: 100%;
-  color: #c8102e;
-  border: 1px solid #c8102e;
+  color: var(--color-botones-links);
+  border: 1px solid var(--color-botones-links);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .favorite-button:hover,
 .favorite-button.is-favorite {
-  color: #fff;
-  background: #c8102e;
+  color: var(--color-texto);
+  background: var(--color-botones-links);
 }
 
 .favorites-list {
@@ -147,15 +160,18 @@
   align-items: center;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #e6e7e9;
+  border: 1px solid #FFFFFF14;
   border-radius: 0.85rem;
-  background: #fff;
+  background: var(--color-tarjetas);
 }
 
 .favorite-item img {
   width: 88px;
   height: 72px;
+  padding: 0.25rem;
   object-fit: contain;
+  border-radius: 0.5rem;
+  background: #fff;
 }
 
 .favorite-details {
@@ -165,6 +181,7 @@
 
 .favorite-details h3 {
   margin: 0.2rem 0;
+  color: var(--color-texto);
   font-size: 1rem;
   font-weight: 750;
 }
@@ -177,25 +194,26 @@
 .empty-favorites {
   padding: 2.5rem 1.5rem;
   text-align: center;
-  border: 1px dashed #c9cbd0;
+  border: 1px dashed #FFFFFF1F;
   border-radius: 1rem;
-  background: #fff;
+  background: var(--color-tarjetas);
 }
 
 .empty-favorites > span {
-  color: #c8102e;
+  color: var(--color-botones-links);
   font-size: 2.5rem;
 }
 
 .empty-favorites h3 {
   margin: 0.5rem 0;
+  color: var(--color-texto);
   font-size: 1.15rem;
   font-weight: 750;
 }
 
 .empty-favorites p {
   margin: 0;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 @media (max-width: 600px) {
@@ -220,7 +238,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .catalog-card {
+  .catalog-card,
+  .catalog-card .card-img-top,
+  .favorite-button {
     transition: none;
   }
 }

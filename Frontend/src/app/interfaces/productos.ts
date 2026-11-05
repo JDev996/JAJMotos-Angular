@@ -5,6 +5,7 @@ export interface Productos {
   precio: number;
   color: string;
   imagen: string;
+  categoria?: string;
 }
 
 export interface ApiProductos {

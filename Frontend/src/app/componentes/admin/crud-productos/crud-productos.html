@@ -5,6 +5,7 @@
       <div class="mb-2"><label class="form-label">Modelo:</label><input type="text" class="form-control" [(ngModel)]="productoForm.modelo" name="modelo" required /></div>
       <div class="mb-2"><label class="form-label">Descripción:</label><input type="text" class="form-control" [(ngModel)]="productoForm.descripcion" name="descripcion" required /></div>
       <div class="mb-2"><label class="form-label">Color:</label><input type="text" class="form-control" [(ngModel)]="productoForm.color" name="color" required /></div>
+      <div class="mb-2"><label class="form-label">Categoría:</label><select class="form-select" [(ngModel)]="productoForm.categoria" name="categoria" required><option value="" disabled>Selecciona una categoría</option><option value="motos">Motos</option><option value="repuestos">Repuestos</option><option value="accesorios">Accesorios</option></select></div>
       <div class="mb-2"><label class="form-label">Precio:</label><input type="number" class="form-control" [(ngModel)]="productoForm.precio" name="precio" required min="0" /></div>
       <div class="mb-3"><label class="form-label">Imagen:</label><input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" /></div>
       <div class="mt-2 d-flex gap-2"><button type="submit" class="btn btn-primary">{{ modo() === 'crear' ? 'Crear producto' : 'Actualizar producto' }}</button><button type="button" class="btn btn-secondary" (click)="cancelarFormulario()">Cancelar</button></div>
