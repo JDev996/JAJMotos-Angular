@@ -12,7 +12,7 @@
 </section>
 
 <nav class="categorias-nav">
-  @for (cat of categorias; track cat.id) {
+  @for (cat of secciones; track cat.id) {
     <button type="button" class="categorias-nav__link" (click)="irACategoria(cat.id)">{{ cat.titulo }}</button>
   }
 </nav>
@@ -25,6 +25,10 @@
 }
 
 <main>
+  @if (cargando()) {
+    <p class="catalogo__estado">Cargando catálogo...</p>
+  }
+
   @for (cat of categoriasVisibles(); track cat.id) {
     <section [id]="cat.id" class="categoria">
       <h2 class="categoria__titulo">{{ cat.titulo }}</h2>
@@ -43,6 +47,13 @@
         <button type="button" class="filtro-precio__limpiar" (click)="limpiarFiltro(cat.id, min, max)">Limpiar</button>
       </div>
 
+      @if (cat.error) {
+        <p class="catalogo__estado catalogo__estado--error">
+          No pudimos cargar {{ cat.titulo.toLowerCase() }}.
+          <button type="button" class="filtro-precio__limpiar" (click)="cargarCatalogo()">Reintentar</button>
+        </p>
+      }
+
       <div class="productos-grid">
         @for (p of productosPaginados(cat); track p.id) {
           <article class="producto-card" [class.producto-card--expandida]="expandidas.has(p.id)">
@@ -55,10 +66,12 @@
                   </div>
                 }
               </div>
-              <button type="button" class="producto-card__flecha producto-card__flecha--prev"
-                (click)="deslizarGaleria(galeria, -1)" aria-label="Imagen anterior">‹</button>
-              <button type="button" class="producto-card__flecha producto-card__flecha--next"
-                (click)="deslizarGaleria(galeria, 1)" aria-label="Imagen siguiente">›</button>
+              @if (p.imagenes.length > 1) {
+                <button type="button" class="producto-card__flecha producto-card__flecha--prev"
+                  (click)="deslizarGaleria(galeria, -1)" aria-label="Imagen anterior">‹</button>
+                <button type="button" class="producto-card__flecha producto-card__flecha--next"
+                  (click)="deslizarGaleria(galeria, 1)" aria-label="Imagen siguiente">›</button>
+              }
             </div>
 
             <div class="producto-card__body">
@@ -66,7 +79,9 @@
               <h3 class="producto-card__nombre">{{ p.nombre }}</h3>
               <span class="producto-card__precio">$ {{ p.precio.toLocaleString('es-CO') }}</span>
               <div class="producto-card__acciones">
-                <button type="button" class="producto-card__boton" (click)="agregarAlCarrito(p)">Agregar al carrito</button>
+                <button type="button" class="producto-card__boton" [disabled]="p.stock <= 0" (click)="agregarAlCarrito(p)">
+                  {{ p.stock > 0 ? 'Agregar al carrito' : 'Agotado' }}
+                </button>
                 @if (p.especificaciones) {
                   <button type="button" class="producto-card__boton producto-card__boton--secundario"
                     (click)="toggleEspecificaciones(p.id)">
@@ -89,7 +104,9 @@
             }
           </article>
         } @empty {
-          <p class="categoria__sin-resultados">No hay productos que coincidan con el filtro.</p>
+          @if (!cat.error) {
+            <p class="categoria__sin-resultados">No hay productos que coincidan con el filtro.</p>
+          }
         }
       </div>
 

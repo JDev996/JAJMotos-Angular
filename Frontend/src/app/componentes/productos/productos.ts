@@ -1,5 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, catchError, forkJoin, map, of } from 'rxjs';
+
+import { MotosService } from '../../services/motos-service';
+import { RespuestosService } from '../../services/respuestos-service';
+import { AccesoriosService } from '../../services/accesorios-service';
+import { Moto } from '../../interfaces/motos';
+import { Repuesto } from '../../interfaces/respuestos';
+import { Accesorio } from '../../interfaces/accesorios';
 
 interface Especificacion {
   icono: string;
@@ -7,20 +15,25 @@ interface Especificacion {
   etiqueta: string;
 }
 
+/** Forma común que usa la tarjeta, sin importar si viene de motos, repuestos o accesorios */
 interface Producto {
   id: string;
   nombre: string;
   marca: string;
   precio: number;
+  stock: number;
   imagenes: string[];
-  especificaciones?: Especificacion[]; 
+  especificaciones?: Especificacion[];
 }
 
 interface Categoria {
   id: string;
   titulo: string;
   productos: Producto[];
+  error: boolean;
 }
+
+const IMAGEN_BASE_URL = 'http://localhost:8080/imagenes/';
 
 @Component({
   imports: [],
@@ -28,95 +41,23 @@ interface Categoria {
   styleUrl: './productos.css',
   templateUrl: './productos.html',
 })
-export class Productos {
+export class Productos implements OnInit {
   private route = inject(ActivatedRoute);
+  private motosService = inject(MotosService);
+  private repuestosService = inject(RespuestosService);
+  private accesoriosService = inject(AccesoriosService);
 
-  categorias: Categoria[] = [
-    {
-      id: 'motos',
-      titulo: 'Motos',
-      productos: [
-        {
-          id: 'moto-suzuki-gsxr-1000r', nombre: 'GSXR 1000R', marca: 'SUZUKI', precio: 85000000,
-          imagenes: ['img/productos/MOTOS/Suzuki1.png', 'img/productos/MOTOS/Suzuki2.png', 'img/productos/MOTOS/Suzuki3.png', 'img/productos/MOTOS/Suzuki4.png'],
-          especificaciones: [
-            { icono: '🔧', valor: '999cc', etiqueta: 'Cilindraje' },
-            { icono: '⚡', valor: '199 HP', etiqueta: 'Potencia' },
-            { icono: '⚖️', valor: '202 kg', etiqueta: 'Peso' },
-            { icono: '⛽', valor: '20.499 km', etiqueta: 'Kilometraje' },
-          ],
-        },
-        {
-          id: 'moto-ducati-streetfighter-v4s', nombre: 'STREETFIGHTER V4S', marca: 'DUCATI', precio: 125000000,
-          imagenes: ['img/productos/MOTOS/Ducati1.png', 'img/productos/MOTOS/Ducati2.png', 'img/productos/MOTOS/Ducati3.png', 'img/productos/MOTOS/Ducati4.png'],
-          especificaciones: [
-            { icono: '🔧', valor: '1.103cc', etiqueta: 'Cilindraje' },
-            { icono: '⚡', valor: '214 HP', etiqueta: 'Potencia' },
-            { icono: '⚖️', valor: '189 kg', etiqueta: 'Peso' },
-            { icono: '⛽', valor: '4.839 km', etiqueta: 'Kilometraje' },
-          ],
-        },
-        {
-          id: 'moto-yamaha-mt09-sp', nombre: 'MT09 SP', marca: 'YAMAHA', precio: 75000000,
-          imagenes: ['img/productos/MOTOS/yamaha1.png', 'img/productos/MOTOS/yamaha2.png', 'img/productos/MOTOS/yamaha3.png', 'img/productos/MOTOS/yamaha4.png'],
-          especificaciones: [
-            { icono: '🔧', valor: '890cc', etiqueta: 'Cilindraje' },
-            { icono: '⚡', valor: '117.3 HP', etiqueta: 'Potencia' },
-            { icono: '⚖️', valor: '194 kg', etiqueta: 'Peso' },
-            { icono: '⛽', valor: '0 km', etiqueta: 'Kilometraje' },
-          ],
-        },
-        {
-          id: 'moto-bmw-m1000-rr', nombre: 'M1000 RR', marca: 'BMW', precio: 235000000,
-          imagenes: ['img/productos/MOTOS/BMW1.png', 'img/productos/MOTOS/BMW2.png', 'img/productos/MOTOS/BMW3.png', 'img/productos/MOTOS/BMW4.png'],
-          especificaciones: [
-            { icono: '🔧', valor: '999cc', etiqueta: 'Cilindraje' },
-            { icono: '⚡', valor: '218 HP', etiqueta: 'Potencia' },
-            { icono: '⚖️', valor: '194 kg', etiqueta: 'Peso' },
-            { icono: '⛽', valor: '440 km', etiqueta: 'Kilometraje' },
-          ],
-        },
-        {
-          id: 'moto-honda-cbr1000-rr', nombre: 'CBR1000 RR', marca: 'HONDA', precio: 140000000,
-          imagenes: ['img/productos/MOTOS/Honda1.png', 'img/productos/MOTOS/Honda2.png', 'img/productos/MOTOS/Honda3.png', 'img/productos/MOTOS/Honda4.png'],
-          especificaciones: [
-            { icono: '🔧', valor: '999cc', etiqueta: 'Cilindraje' },
-            { icono: '⚡', valor: '217 HP', etiqueta: 'Potencia' },
-            { icono: '⚖️', valor: '201 kg', etiqueta: 'Peso' },
-            { icono: '⛽', valor: '5.005 km', etiqueta: 'Kilometraje' },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'repuestos',
-      titulo: 'Repuestos',
-      productos: [
-        { id: 'repuesto-honda-farola-cbr', nombre: 'FAROLA CBR', marca: 'HONDA', precio: 2300000,
-          imagenes: ['img/productos/REPUESTOS/CBR33.jpg', 'img/productos/REPUESTOS/CBR333.jpg'] },
-        { id: 'repuesto-yamaha-carenaje-r6', nombre: 'CARENAJE R6', marca: 'YAMAHA', precio: 1700000,
-          imagenes: ['img/productos/REPUESTOS/R633.png', 'img/productos/REPUESTOS/R6333.png'] },
-        { id: 'repuesto-kawasaki-farola-z900', nombre: 'FAROLA Z900', marca: 'KAWASAKI', precio: 2900000,
-          imagenes: ['img/productos/REPUESTOS/Z90022.png', 'img/productos/REPUESTOS/Z900222.png'] },
-        { id: 'repuesto-yamaha-farola-mt09-v2', nombre: 'FAROLA MT09 V2', marca: 'YAMAHA', precio: 2000000,
-          imagenes: ['img/productos/REPUESTOS/MT0911.png', 'img/productos/REPUESTOS/MT09111.png'] },
-      ],
-    },
-    {
-      id: 'accesorios',
-      titulo: 'Accesorios',
-      productos: [
-        { id: 'accesorio-akrapovic-titan-carbon-racing', nombre: 'TITAN CARBON RACING', marca: 'AKRAPOVIC', precio: 4000000,
-          imagenes: ['img/productos/ACCESORIOS/AKRA11.png', 'img/productos/ACCESORIOS/AKRA111.png'] },
-        { id: 'accesorio-akrapovic-titan-carbon-gp', nombre: 'TITAN CARBON GP', marca: 'AKRAPOVIC', precio: 7000000,
-          imagenes: ['img/productos/ACCESORIOS/AKRA22.png', 'img/productos/ACCESORIOS/AKRA222.png'] },
-        { id: 'accesorio-rizoma-stealth', nombre: 'STEALTH', marca: 'RIZOMA', precio: 800000,
-          imagenes: ['img/productos/ACCESORIOS/RIZOMA11.png', 'img/productos/ACCESORIOS/RIZOMA111.png'] },
-        { id: 'accesorio-rizoma-fender-eliminator', nombre: 'FENDER ELIMINATOR', marca: 'RIZOMA', precio: 1000000,
-          imagenes: ['img/productos/ACCESORIOS/RIZOMA22.png', 'img/productos/ACCESORIOS/RIZOMA222.png'] },
-      ],
-    },
+  // Pestañas de navegación: se muestran aunque los datos aún no hayan llegado
+  readonly secciones = [
+    { id: 'motos', titulo: 'Motos' },
+    { id: 'repuestos', titulo: 'Repuestos' },
+    { id: 'accesorios', titulo: 'Accesorios' },
   ];
+
+  // Signals: la app no usa zone.js, así que los datos que llegan del backend
+  // deben ir en signals para que la vista se actualice sola.
+  categorias = signal<Categoria[]>([]);
+  cargando = signal(true);
 
   private readonly POR_PAGINA = 4;
 
@@ -140,17 +81,79 @@ export class Productos {
     this.categoriaFiltro = cat && cat !== 'todos' ? cat : null;
   }
 
+  ngOnInit(): void {
+    this.cargarCatalogo();
+  }
+
+  /** Pide las tres categorías al backend en paralelo. Si una falla, las otras se muestran igual. */
+  cargarCatalogo(): void {
+    this.cargando.set(true);
+
+    forkJoin({
+      motos: this.pedir<Moto>(this.motosService.getAll()),
+      repuestos: this.pedir<Repuesto>(this.repuestosService.getAll()),
+      accesorios: this.pedir<Accesorio>(this.accesoriosService.getAll()),
+    }).subscribe(({ motos, repuestos, accesorios }) => {
+      this.categorias.set([
+        { id: 'motos', titulo: 'Motos', error: motos === null, productos: (motos ?? []).map(m => this.desdeMoto(m)) },
+        { id: 'repuestos', titulo: 'Repuestos', error: repuestos === null, productos: (repuestos ?? []).map(r => this.desdeItem(r, 'repuesto')) },
+        { id: 'accesorios', titulo: 'Accesorios', error: accesorios === null, productos: (accesorios ?? []).map(a => this.desdeItem(a, 'accesorio')) },
+      ]);
+      this.cargando.set(false);
+    });
+  }
+
+  /** Extrae `datos` de la respuesta { resultado, mensaje, datos }. Devuelve null si hubo error. */
+  private pedir<T>(peticion: Observable<any>): Observable<T[] | null> {
+    return peticion.pipe(
+      map(resp => (Array.isArray(resp?.datos) ? (resp.datos as T[]) : null)),
+      catchError(err => {
+        console.error('Error al cargar el catálogo', err);
+        return of(null);
+      }),
+    );
+  }
+
+  private desdeMoto(m: Moto): Producto {
+    return {
+      id: m._id ?? `${m.marca}-${m.referencia}`,
+      nombre: m.referencia,
+      marca: m.marca,
+      precio: Number(m.precio),
+      stock: Number(m.stock),
+      imagenes: [IMAGEN_BASE_URL + m.Foto],
+      especificaciones: [
+        { icono: '🔧', valor: `${m.cilindraje} cc`, etiqueta: 'Cilindraje' },
+        { icono: '📅', valor: String(m.modelo), etiqueta: 'Modelo' },
+        { icono: '🏍️', valor: m.categoria, etiqueta: 'Tipo' },
+        { icono: '📦', valor: String(m.stock), etiqueta: 'Disponibles' },
+      ],
+    };
+  }
+
+  private desdeItem(item: Repuesto | Accesorio, tipo: string): Producto {
+    return {
+      id: item._id ?? `${tipo}-${item.marca}-${item.referencia}`,
+      nombre: item.referencia,
+      marca: item.marca,
+      precio: Number(item.precio),
+      stock: Number(item.stock),
+      imagenes: [IMAGEN_BASE_URL + item.Foto],
+    };
+  }
 
   categoriasVisibles(): Categoria[] {
     return this.categoriaFiltro
-      ? this.categorias.filter(c => c.id === this.categoriaFiltro)
-      : this.categorias;
+      ? this.categorias().filter(c => c.id === this.categoriaFiltro)
+      : this.categorias();
   }
 
   productosFiltrados(cat: Categoria): Producto[] {
     const { min, max } = this.filtros[cat.id];
+    const marca = this.marcaFiltro?.toUpperCase();
     return cat.productos.filter(p =>
-      (!this.marcaFiltro || p.marca === this.marcaFiltro) &&
+      // En la BD la marca puede venir como "Honda" o "HONDA": se compara sin mayúsculas
+      (!marca || p.marca.toUpperCase() === marca) &&
       (min === null || p.precio >= min) &&
       (max === null || p.precio <= max)
     );
