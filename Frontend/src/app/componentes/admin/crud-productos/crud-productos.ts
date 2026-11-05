@@ -40,7 +40,7 @@ export class CrudProductos implements OnInit {
   }
 
   resetProducto(): Productos {
-    return { modelo: '', descripcion: '', precio: 0, color: '', imagen: '' };
+    return { modelo: '', descripcion: '', precio: 0, color: '', imagen: '', categoria: '' };
   }
 
   prepararCrear(): void {
@@ -75,6 +75,7 @@ export class CrudProductos implements OnInit {
     formData.append('descripcion', this.productoForm.descripcion);
     formData.append('precio', this.productoForm.precio.toString());
     formData.append('color', this.productoForm.color);
+    formData.append('categoria', this.productoForm.categoria ?? '');
     formData.append('imagen', file);
 
     this.productosService.crear(formData).subscribe({
@@ -101,6 +102,7 @@ export class CrudProductos implements OnInit {
     formData.append('descripcion', this.productoForm.descripcion);
     formData.append('precio', this.productoForm.precio.toString());
     formData.append('color', this.productoForm.color);
+    formData.append('categoria', this.productoForm.categoria ?? '');
     const file = this.selectedFile();
     if (file) {
       formData.append('imagen', file);
