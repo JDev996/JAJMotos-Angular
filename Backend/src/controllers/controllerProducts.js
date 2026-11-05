@@ -14,6 +14,7 @@ const controllerProducts = {
                 precio: req.body.precio,
                 color: req.body.color,
                 imagen: req.file.filename,
+                categoria: req.body.categoria,
             });
             return res.json({ result: 'fine', message: 'Producto creado', data: product });
         } catch (error) {
@@ -42,6 +43,7 @@ const controllerProducts = {
                 precio: req.body.precio,
                 color: req.body.color,
                 imagen: req.file ? req.file.filename : existing.imagen,
+                categoria: req.body.categoria,
             };
             const updated = await modelProducto.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });
             if (req.file && existing.imagen) {
