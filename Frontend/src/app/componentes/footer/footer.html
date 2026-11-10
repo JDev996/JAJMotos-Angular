@@ -48,7 +48,6 @@
 
 <div class="collapse position-fixed panelChat" id="panelChat">
   <div class="card shadow">
-
     <div class="card-header bg-danger text-white fw-bold">
       <i class="bi bi-robot me-2"></i>Asesor JAJ Motos
     </div>
@@ -65,7 +64,11 @@
         </div>
       }
       @if (enviandoMensaje()) {
-        <div class="burbujaChat burbujaBot indicadorEscritura" role="status" aria-label="El asesor está escribiendo">
+        <div
+          class="burbujaChat burbujaBot indicadorEscritura"
+          role="status"
+          aria-label="El asesor está escribiendo"
+        >
           <span class="autorChat">Asesor</span>
           <span aria-hidden="true" class="puntosEscritura"><i></i><i></i><i></i></span>
           <span class="visually-hidden">El asesor está escribiendo...</span>
@@ -73,22 +76,37 @@
       }
       @if (errorChat()) {
         <div class="alert alert-danger py-2 px-3 mb-0" role="alert">{{ errorChat() }}</div>
-    <div class="card-body mensajesChat" #mensajesChat>
-      @for (mensaje of mensajes(); track $index) {
-        <div [class]="mensaje.rol === 'asesor' ? 'burbujaBot' : 'burbujaMotero'">{{ mensaje.texto }}</div>
-      }
-      @if (escribiendo()) {
-        <div class="burbujaBot escribiendo">El asesor está escribiendo...</div>
       }
     </div>
 
     <div class="card-footer">
       <div class="d-flex gap-2 mb-2">
-        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto económica.')">Barata</button>
-        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto para la ciudad.')">Ciudad</button>
-        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto para viajar por carretera.')">Ruta</button>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          [disabled]="enviandoMensaje()"
+          (click)="usarSugerenciaChat('Busco una moto económica.')"
+        >
+          Barata
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          [disabled]="enviandoMensaje()"
+          (click)="usarSugerenciaChat('Busco una moto para la ciudad.')"
+        >
+          Ciudad
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          [disabled]="enviandoMensaje()"
+          (click)="usarSugerenciaChat('Busco una moto para viajar por carretera.')"
+        >
+          Ruta
+        </button>
       </div>
-      <form class="input-group" (submit)="enviarMensajeChat($event)">
+      <div class="input-group">
         <label class="visually-hidden" for="mensaje-chat-flotante">Escribe tu mensaje</label>
         <input
           id="mensaje-chat-flotante"
@@ -97,24 +115,22 @@
           class="form-control"
           [value]="textoChat"
           (input)="actualizarTextoChat($event)"
+          (keydown.enter)="enviarMensajeChat($event)"
           maxlength="1000"
           placeholder="Escribí tu mensaje..."
           autocomplete="off"
           [disabled]="enviandoMensaje()"
+        />
+        <button
+          type="button"
+          class="btn btn-danger"
+          [disabled]="enviandoMensaje() || !textoChat.trim()"
+          (click)="enviarMensajeChat()"
         >
-        <button type="submit" class="btn btn-danger" [disabled]="enviandoMensaje() || !textoChat.trim()">
           {{ enviandoMensaje() ? 'Enviando...' : 'Enviar' }}
         </button>
-        @for (sugerencia of sugerencias; track sugerencia.etiqueta) {
-          <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="escribiendo()" (click)="enviar(sugerencia.texto)">{{ sugerencia.etiqueta }}</button>
-        }
       </div>
-      <form class="input-group" (ngSubmit)="enviar()">
-        <input type="text" class="form-control" placeholder="Escribí tu mensaje..." name="textoMensaje" [(ngModel)]="textoMensaje" maxlength="500" autocomplete="off">
-        <button type="submit" class="btn btn-danger" [disabled]="escribiendo()">Enviar</button>
-      </form>
     </div>
-
   </div>
 </div>
 
