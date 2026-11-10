@@ -34,6 +34,10 @@
   width: fit-content;
 }
 
+.burbujaChat p {
+  overflow-wrap: anywhere;
+}
+
 .burbujaBot {
   background-color: var(--color-tarjetas);
 }
@@ -41,4 +45,17 @@
 .burbujaMotero {
   background-color: var(--color-botones-links);
   margin-left: auto;
+}
+
+.autorChat {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #b20d26;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.burbujaMotero .autorChat {
+  color: #fff;
 }

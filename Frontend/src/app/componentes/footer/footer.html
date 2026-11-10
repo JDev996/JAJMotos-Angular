@@ -53,20 +53,49 @@
       <i class="bi bi-robot me-2"></i>Asesor JAJ Motos
     </div>
 
-    <div class="card-body mensajesChat">
-      <div class="burbujaBot">¡Hola! Contame qué buscás pues!: una moto económica, de ciudad o de ruta.</div>
+    <div class="card-body mensajesChat" aria-live="polite" aria-relevant="additions">
+      @for (mensaje of mensajesChat(); track $index) {
+        <div
+          class="burbujaChat"
+          [class.burbujaMotero]="mensaje.role === 'user'"
+          [class.burbujaBot]="mensaje.role === 'assistant'"
+        >
+          <span class="autorChat">{{ mensaje.role === 'user' ? 'Tú' : 'Asesor' }}</span>
+          <p class="mb-0">{{ mensaje.content }}</p>
+        </div>
+      }
+      @if (enviandoMensaje()) {
+        <p class="text-secondary small mb-0" role="status">El asesor está escribiendo...</p>
+      }
+      @if (errorChat()) {
+        <div class="alert alert-danger py-2 px-3 mb-0" role="alert">{{ errorChat() }}</div>
+      }
     </div>
 
     <div class="card-footer">
       <div class="d-flex gap-2 mb-2">
-        <button type="button" class="btn btn-outline-danger btn-sm">Barata</button>
-        <button type="button" class="btn btn-outline-danger btn-sm">Ciudad</button>
-        <button type="button" class="btn btn-outline-danger btn-sm">Ruta</button>
+        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto económica.')">Barata</button>
+        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto para la ciudad.')">Ciudad</button>
+        <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto para viajar por carretera.')">Ruta</button>
       </div>
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Escribí tu mensaje...">
-        <button type="button" class="btn btn-danger">Enviar</button>
-      </div>
+      <form class="input-group" (ngSubmit)="enviarMensajeChat()">
+        <label class="visually-hidden" for="mensaje-chat-flotante">Escribe tu mensaje</label>
+        <input
+          id="mensaje-chat-flotante"
+          name="mensajeChat"
+          type="text"
+          class="form-control"
+          [value]="textoChat"
+          (input)="actualizarTextoChat($event)"
+          maxlength="1000"
+          placeholder="Escribí tu mensaje..."
+          autocomplete="off"
+          [disabled]="enviandoMensaje()"
+        >
+        <button type="submit" class="btn btn-danger" [disabled]="enviandoMensaje() || !textoChat.trim()">
+          {{ enviandoMensaje() ? 'Enviando...' : 'Enviar' }}
+        </button>
+      </form>
     </div>
 
   </div>
