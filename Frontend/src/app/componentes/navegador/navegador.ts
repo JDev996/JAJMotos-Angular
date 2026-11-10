@@ -1,10 +1,29 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProfileState } from '../../services/profile-state';
+import { ProfileEditor } from '../profile-editor/profile-editor';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, ProfileEditor],
   selector: 'app-navegador',
   styleUrl: './navegador.css',
   templateUrl: './navegador.html',
 })
-export class Navegador {}
+export class Navegador implements OnInit {
+  private readonly profileState = inject(ProfileState);
+  private readonly destroyRef = inject(DestroyRef);
+  readonly perfil = this.profileState.profile;
+  editandoPerfil = false;
+
+  constructor(private readonly router: Router) {}
+
+  ngOnInit(): void {
+    this.profileState.loadForCurrentToken();
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.profileState.loadForCurrentToken());
+  }
+}

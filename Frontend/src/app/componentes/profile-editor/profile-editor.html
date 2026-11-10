@@ -1,0 +1,61 @@
+<div
+  class="profile-backdrop"
+  [class.is-closing]="cerrando"
+  (click)="cerrar()"
+  (animationend)="finalizarCierre($event)"
+>
+  <section
+    class="profile-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="profile-title"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="profile-dialog-header">
+      <h2 id="profile-title">Editar perfil</h2>
+      <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="cerrar()"></button>
+    </header>
+
+    @if (errorMensaje) {
+      <p class="alert alert-danger" role="alert">{{ errorMensaje }}</p>
+    }
+
+    <form [formGroup]="profileForm" (ngSubmit)="guardarPerfil()">
+      <div class="profile-photo-preview">
+        @if (fotoPrevisualizacion) {
+          <img [src]="fotoPrevisualizacion" alt="Previsualización de la foto de perfil" />
+        } @else {
+          <span aria-hidden="true">{{ profileForm.controls.nombre.value.charAt(0) || '?' }}</span>
+        }
+      </div>
+
+      <label class="form-label" for="profile-nombre">Nombre</label>
+      <input id="profile-nombre" class="form-control" formControlName="nombre" />
+      @if (profileForm.controls.nombre.touched && profileForm.controls.nombre.invalid) {
+        <small class="text-danger">Ingresa tu nombre.</small>
+      }
+
+      <label class="form-label mt-3" for="profile-apellido">Apellido</label>
+      <input id="profile-apellido" class="form-control" formControlName="apellido" />
+      @if (profileForm.controls.apellido.touched && profileForm.controls.apellido.invalid) {
+        <small class="text-danger">Ingresa tu apellido.</small>
+      }
+
+      <label class="form-label mt-3" for="profile-foto">Foto de perfil</label>
+      <input
+        id="profile-foto"
+        class="form-control"
+        type="file"
+        accept="image/*"
+        (change)="onFotoSeleccionada($event)"
+      />
+
+      <footer class="profile-actions">
+        <button type="button" class="btn btn-outline-light" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="btn btn-danger" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </footer>
+    </form>
+  </section>
+</div>

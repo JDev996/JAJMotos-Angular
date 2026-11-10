@@ -3,12 +3,48 @@
     <a class="navbar-brand" routerLink="/home">JAJ Motos</a>
 
     <div class="acciones order-lg-last">
-      <a class="login-icono" routerLink="/login" routerLinkActive="active" aria-label="Iniciar sesión" title="Iniciar sesión">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-        </svg>
-      </a>
+      @if (perfil()?.nombre; as nombre) {
+        <a
+          class="bienvenida-usuario"
+          [routerLink]="perfil()?.rol === 'admin' ? '/admin' : '/user-panel'"
+          title="Volver a mi panel"
+        >
+          Bienvenido, {{ nombre }}
+        </a>
+      }
+      @if (perfil()) {
+        <button
+          type="button"
+          class="login-icono profile-trigger"
+          [attr.aria-label]="'Editar perfil de ' + perfil()?.nombre"
+          title="Editar perfil"
+          (click)="editandoPerfil = true"
+        >
+          @if (perfil()?.Foto && perfil()?.Foto !== 'default-user.png') {
+            <img
+              class="nav-profile-photo"
+              [src]="'http://localhost:8080/imagenes/' + perfil()?.Foto"
+              alt=""
+            />
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
+          }
+        </button>
+      } @else {
+        <a class="login-icono" routerLink="/login" routerLinkActive="active" aria-label="Iniciar sesión" title="Iniciar sesión">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+          </svg>
+        </a>
+      }
+
+      @if (editandoPerfil) {
+        <app-profile-editor (closed)="editandoPerfil = false"></app-profile-editor>
+      }
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
         aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">

@@ -4,15 +4,15 @@
 
     <nav class="nav flex-column gap-2" aria-label="Secciones">
       @for (section of sections; track section) {
-        <button
-          type="button"
+        <a
+          [routerLink]="section === 'Usuarios' ? '/admin' : ['/admin', section.toLowerCase()]"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ariaCurrentWhenActive="page"
           class="nav-link text-start"
-          [class.active]="activeSection === section"
-          [attr.aria-current]="activeSection === section ? 'page' : null"
-          (click)="selectSection(section)"
         >
           {{ section }}
-        </button>
+        </a>
       }
     </nav>
 
@@ -130,18 +130,9 @@
           <p class="mb-0">No hay usuarios para mostrar.</p>
         }
       </div>
-    } @else if (isSection('Productos')) {
-      <app-crud-productos></app-crud-productos>
-    } @else if (isSection('Motos')) {
-      <app-crud-motos></app-crud-motos>
-    } @else if (isSection('Repuestos')) {
-      <app-crud-respuestos></app-crud-respuestos>
-    } @else {
-      <div class="admin-placeholder">
-        <p class="mb-0">
-          Desde aquí podrás gestionar {{ activeSection.toLowerCase() }}.
-        </p>
-      </div>
     }
+    <div [class.d-none]="isSection('Usuarios')">
+      <router-outlet></router-outlet>
+    </div>
   </section>
 </main>
