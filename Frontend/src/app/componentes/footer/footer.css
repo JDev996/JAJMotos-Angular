@@ -32,6 +32,8 @@
   margin-bottom: 8px;
   max-width: 85%;
   width: fit-content;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .burbujaChat p {
@@ -58,4 +60,8 @@
 
 .burbujaMotero .autorChat {
   color: #fff;
+}
+.escribiendo {
+  color: var(--color-texto-secundario);
+  font-style: italic;
 }
