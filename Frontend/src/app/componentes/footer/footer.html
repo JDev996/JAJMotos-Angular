@@ -73,6 +73,12 @@
       }
       @if (errorChat()) {
         <div class="alert alert-danger py-2 px-3 mb-0" role="alert">{{ errorChat() }}</div>
+    <div class="card-body mensajesChat" #mensajesChat>
+      @for (mensaje of mensajes(); track $index) {
+        <div [class]="mensaje.rol === 'asesor' ? 'burbujaBot' : 'burbujaMotero'">{{ mensaje.texto }}</div>
+      }
+      @if (escribiendo()) {
+        <div class="burbujaBot escribiendo">El asesor está escribiendo...</div>
       }
     </div>
 
@@ -99,6 +105,13 @@
         <button type="submit" class="btn btn-danger" [disabled]="enviandoMensaje() || !textoChat.trim()">
           {{ enviandoMensaje() ? 'Enviando...' : 'Enviar' }}
         </button>
+        @for (sugerencia of sugerencias; track sugerencia.etiqueta) {
+          <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="escribiendo()" (click)="enviar(sugerencia.texto)">{{ sugerencia.etiqueta }}</button>
+        }
+      </div>
+      <form class="input-group" (ngSubmit)="enviar()">
+        <input type="text" class="form-control" placeholder="Escribí tu mensaje..." name="textoMensaje" [(ngModel)]="textoMensaje" maxlength="500" autocomplete="off">
+        <button type="submit" class="btn btn-danger" [disabled]="escribiendo()">Enviar</button>
       </form>
     </div>
 
