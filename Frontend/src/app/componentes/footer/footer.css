@@ -32,6 +32,8 @@
   margin-bottom: 8px;
   max-width: 85%;
   width: fit-content;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .burbujaBot {
@@ -41,4 +43,9 @@
 .burbujaMotero {
   background-color: var(--color-botones-links);
   margin-left: auto;
+}
+
+.escribiendo {
+  color: var(--color-texto-secundario);
+  font-style: italic;
 }
