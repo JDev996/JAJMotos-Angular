@@ -61,3 +61,48 @@
 .burbujaMotero .autorChat {
   color: #fff;
 }
+
+.indicadorEscritura {
+  min-width: 76px;
+}
+
+.puntosEscritura {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 14px;
+}
+
+.puntosEscritura i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #777;
+  animation: punto-escribiendo 1.2s infinite ease-in-out;
+}
+
+.puntosEscritura i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.puntosEscritura i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes punto-escribiendo {
+  0%, 60%, 100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .puntosEscritura i {
+    animation: none;
+    opacity: 1;
+  }
+}
