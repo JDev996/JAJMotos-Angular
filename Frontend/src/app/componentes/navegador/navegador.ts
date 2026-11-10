@@ -4,6 +4,7 @@ import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProfileState } from '../../services/profile-state';
 import { ProfileEditor } from '../profile-editor/profile-editor';
+import { CarritoService } from '../../services/carrito-service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive, ProfileEditor],
@@ -15,6 +16,7 @@ export class Navegador implements OnInit {
   private readonly profileState = inject(ProfileState);
   private readonly destroyRef = inject(DestroyRef);
   readonly perfil = this.profileState.profile;
+  readonly carrito = inject(CarritoService);
   editandoPerfil = false;
 
   constructor(private readonly router: Router) {}
@@ -24,6 +26,10 @@ export class Navegador implements OnInit {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.profileState.loadForCurrentToken());
+      .subscribe(() => {
+        this.profileState.loadForCurrentToken();
+        // Si cambió la sesión (login/logout), carga el carrito del usuario correcto
+        this.carrito.sincronizarUsuario();
+      });
   }
 }
