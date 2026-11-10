@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
-const adminSections = ['Usuarios', 'Productos', 'Motos', 'Repuestos'] as const;
+const adminSections = ['Usuarios', 'Productos', 'Motos', 'Repuestos', 'Solicitudes'] as const;
 
 type AdminSection = (typeof adminSections)[number];
 

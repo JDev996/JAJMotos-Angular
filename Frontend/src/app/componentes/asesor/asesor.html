@@ -1,6 +1,60 @@
 <section class="container py-5">
-  
   <h1 class="text-center mb-4">¿Qué tipo de motero eres?</h1>
+
+  <section class="asesor-chat mx-auto mb-5" aria-labelledby="titulo-chat">
+    <header class="asesor-chat-header">
+      <div>
+        <h2 id="titulo-chat" class="h4 mb-1">Asesor virtual JAJ Motos</h2>
+        <p class="mb-0">Cuéntanos qué necesitas y te ayudamos a elegir.</p>
+      </div>
+      <i class="bi bi-chat-dots fs-2" aria-hidden="true"></i>
+    </header>
+
+    <div class="asesor-chat-mensajes" aria-live="polite" aria-relevant="additions">
+      @for (mensaje of mensajes(); track $index) {
+        <div class="mensaje-chat" [class.mensaje-usuario]="mensaje.role === 'user'">
+          <span class="mensaje-autor">{{ mensaje.role === 'user' ? 'Tú' : 'Asesor' }}</span>
+          <p class="mb-0">{{ mensaje.content }}</p>
+        </div>
+      }
+
+      @if (enviando()) {
+        <p class="asesor-escribiendo" role="status">El asesor está escribiendo...</p>
+      }
+    </div>
+
+    @if (error()) {
+      <div class="alert alert-danger mx-3 mb-2" role="alert">{{ error() }}</div>
+    }
+
+    <div class="asesor-sugerencias" aria-label="Preguntas sugeridas">
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="usarSugerencia('Busco una moto económica para movilizarme en la ciudad.')">
+        Económica y para ciudad
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="usarSugerencia('¿Qué moto recomiendas para viajar por carretera?')">
+        Para viajar
+      </button>
+    </div>
+
+    <form class="asesor-chat-form" (ngSubmit)="enviarMensaje()">
+      <label class="visually-hidden" for="mensaje-asesor">Escribe tu consulta</label>
+      <input
+        id="mensaje-asesor"
+        name="mensaje"
+        type="text"
+        class="form-control"
+        [(ngModel)]="textoMensaje"
+        maxlength="1000"
+        placeholder="Escribe tu consulta..."
+        autocomplete="off"
+        [disabled]="enviando()"
+      />
+      <button type="submit" class="btn btn-danger" [disabled]="enviando() || !textoMensaje.trim()">
+        {{ enviando() ? 'Enviando...' : 'Enviar' }}
+      </button>
+    </form>
+  </section>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
   <div class="col">
     <div class="card h-100 text-center p-4 tarjetaMotero">

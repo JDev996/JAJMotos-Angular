@@ -14,6 +14,7 @@ import { UserPanelComponent } from './componentes/user-panel/user-panel';
 import { CrudProductos } from './componentes/admin/crud-productos/crud-productos';
 import { CrudMotos } from './componentes/admin/crud-motos/crud-motos';
 import { CrudRespuestos } from './componentes/admin/crud-respuestos/crud-respuestos';
+import { AdminSolicitudesComponent } from './componentes/admin-panel/admin-solicitudes';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -30,6 +31,7 @@ export const routes: Routes = [
       { path: 'productos', title: 'Productos', component: CrudProductos },
       { path: 'motos', title: 'Motos', component: CrudMotos },
       { path: 'repuestos', title: 'Repuestos', component: CrudRespuestos },
+      { path: 'solicitudes', title: 'Solicitudes', component: AdminSolicitudesComponent },
     ],
   },
   { path: 'user-panel',     title: 'Mi garaje',      component: UserPanelComponent, canActivate: [authGuard], data: { animation: 'UserPanel', role: 'user' } },
