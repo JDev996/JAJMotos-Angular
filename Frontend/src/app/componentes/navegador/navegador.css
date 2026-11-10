@@ -49,6 +49,29 @@
   color: #C8102E;
 }
 
+.carrito-icono {
+  position: relative;
+  font-size: 1.45rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.carrito-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #C8102E;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
 .nav-link.active {
   color: #fff !important;
   border-bottom: 2px solid #C8102E;

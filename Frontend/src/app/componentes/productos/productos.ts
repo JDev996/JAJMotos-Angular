@@ -10,6 +10,7 @@ import { Moto } from '../../interfaces/motos';
 import { Repuesto } from '../../interfaces/respuestos';
 import { Accesorio } from '../../interfaces/accesorios';
 import { Productos as ProductoTienda } from '../../interfaces/productos';
+import { CarritoService } from '../../services/carrito-service';
 
 interface Especificacion {
   icono: string;
@@ -55,6 +56,11 @@ export class Productos implements OnInit {
   private repuestosService = inject(RespuestosService);
   private accesoriosService = inject(AccesoriosService);
   private productosService = inject(ProductosService);
+  private carrito = inject(CarritoService);
+
+  /** id del último producto agregado, para mostrar "✓ Agregado" un momento. */
+  recienAgregado = signal<string | null>(null);
+  private timerAgregado?: ReturnType<typeof setTimeout>;
 
   productosMotos = signal<ProductoTienda[]>([]);
   productosRepuestos = signal<ProductoTienda[]>([]);
@@ -273,7 +279,19 @@ export class Productos implements OnInit {
     galeria.scrollBy({ left: direccion * galeria.clientWidth, behavior: 'smooth' });
   }
 
-  agregarAlCarrito(producto: Producto) {
-    console.log('Agregar al carrito:', producto);
+  agregarAlCarrito(prod: ProductoTienda, categoria: string) {
+    const id = prod._id ?? `${categoria}-${prod.modelo}`;
+    this.carrito.agregar({
+      id,
+      nombre: prod.modelo,
+      descripcion: prod.descripcion,
+      precio: Number(prod.precio),
+      imagen: this.imagenBaseURL + prod.imagen,
+      categoria,
+    });
+
+    this.recienAgregado.set(id);
+    clearTimeout(this.timerAgregado);
+    this.timerAgregado = setTimeout(() => this.recienAgregado.set(null), 1500);
   }
 }

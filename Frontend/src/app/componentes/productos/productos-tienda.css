@@ -252,3 +252,30 @@
         transition: none;
     }
 }
+
+/* Botón "Agregar al carrito" de las tarjetas */
+.btn-carrito {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--color-botones-links);
+    border-radius: 0.5rem;
+    background: var(--color-botones-links);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-carrito:hover {
+    background: var(--color-hover);
+}
+
+.btn-carrito--ok,
+.btn-carrito--ok:hover {
+    background: #1f8a4c;
+    border-color: #1f8a4c;
+}

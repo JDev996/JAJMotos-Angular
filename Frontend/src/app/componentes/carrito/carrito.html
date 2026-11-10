@@ -1,0 +1,259 @@
+<main class="carrito-page">
+  <header class="carrito-hero">
+    <p class="eyebrow">JAJ MOTOS · TU COMPRA</p>
+    <h1>
+      @switch (paso()) {
+        @case ('pago') { Pasarela de pago }
+        @case ('procesando') { Procesando pago }
+        @case ('aprobado') { ¡Pago aprobado! }
+        @case ('rechazado') { Pago rechazado }
+        @default { Mi carrito }
+      }
+    </h1>
+
+    <ol class="pasos" aria-label="Progreso de la compra">
+      <li [class.activo]="paso() === 'carrito'" [class.hecho]="paso() !== 'carrito'">1. Carrito</li>
+      <li [class.activo]="paso() === 'pago' || paso() === 'procesando' || paso() === 'rechazado'" [class.hecho]="paso() === 'aprobado'">2. Pago</li>
+      <li [class.activo]="paso() === 'aprobado'">3. Confirmación</li>
+    </ol>
+  </header>
+
+  <!-- =================  CARRITO ================= -->
+
+  @if (paso() === 'carrito') {
+    @if (carrito.items().length === 0) {
+      <section class="vacio">
+        <i class="bi bi-cart-x" aria-hidden="true"></i>
+        <h2>Tu carrito está vacío</h2>
+        <p>Agrega motos, repuestos o accesorios desde el catálogo.</p>
+        <a routerLink="/productos" class="btn-jaj">Ver productos</a>
+      </section>
+    } @else {
+      <div class="carrito-layout">
+        <section class="lista" aria-label="Productos en el carrito">
+          <div class="lista__cabecera">
+            <span>{{ carrito.cantidadTotal() }} {{ carrito.cantidadTotal() === 1 ? 'producto' : 'productos' }}</span>
+            <button type="button" class="link-vaciar" (click)="vaciar()">
+              <i class="bi bi-trash3"></i> Vaciar carrito
+            </button>
+          </div>
+
+          @for (item of carrito.items(); track item.id) {
+            <article class="item">
+              <img [src]="item.imagen" [alt]="item.nombre" class="item__img" />
+
+              <div class="item__info">
+                @if (item.categoria) {
+                  <span class="item__categoria">{{ item.categoria }}</span>
+                }
+                <h3>{{ item.nombre }}</h3>
+                <p class="item__unitario">{{ item.precio | currency:'COP':'symbol-narrow':'1.0-0' }} c/u</p>
+              </div>
+
+              <div class="contador" role="group" [attr.aria-label]="'Cantidad de ' + item.nombre">
+                <button type="button" (click)="carrito.decrementar(item.id)"
+                  [attr.aria-label]="item.cantidad === 1 ? 'Quitar ' + item.nombre : 'Restar uno'">
+                  <i class="bi" [class.bi-dash]="item.cantidad > 1" [class.bi-trash3]="item.cantidad === 1"></i>
+                </button>
+                <input type="number" min="1" [max]="carrito.cantidadMaxima" [value]="item.cantidad"
+                  aria-label="Cantidad" (change)="escribirCantidad(item, $any($event.target).value)" />
+                <button type="button" (click)="carrito.incrementar(item.id)"
+                  [disabled]="item.cantidad >= carrito.cantidadMaxima" aria-label="Sumar uno">
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
+
+              <p class="item__subtotal">{{ subtotalItem(item) | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+
+              <button type="button" class="item__eliminar" (click)="carrito.eliminar(item.id)"
+                [attr.aria-label]="'Eliminar ' + item.nombre" title="Eliminar">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </article>
+          }
+
+          <a routerLink="/productos" class="seguir"><i class="bi bi-arrow-left"></i> Seguir comprando</a>
+        </section>
+
+        <aside class="resumen">
+          <h2>Resumen</h2>
+          <div class="resumen__fila">
+            <span>Subtotal ({{ carrito.cantidadTotal() }})</span>
+            <span>{{ carrito.total() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div class="resumen__fila">
+            <span>Envío</span>
+            <span class="gratis">Gratis</span>
+          </div>
+          <div class="resumen__fila resumen__total">
+            <span>Total</span>
+            <span>{{ carrito.total() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <p class="resumen__nota">IVA incluido</p>
+          <button type="button" class="btn-jaj btn-bloque" (click)="irAPagar()">
+            <i class="bi bi-lock-fill"></i> Ir a pagar
+          </button>
+        </aside>
+      </div>
+    }
+  }
+
+  <!-- ================= PASARELA ================= -->
+
+  @if (paso() === 'pago' || paso() === 'procesando') {
+    <div class="carrito-layout">
+      <section class="pasarela">
+        <div class="modo-prueba">
+          <i class="bi bi-info-circle"></i>
+          <div>
+            <strong>Modo prueba:</strong> no se realiza ningún cobro real.
+            Usa <code>4242 4242 4242 4242</code> (aprobada) o <code>4000 0000 0000 0002</code> (rechazada),
+            con cualquier fecha futura y CVV.
+          </div>
+        </div>
+
+        <form [formGroup]="formPago" (ngSubmit)="pagar()" novalidate>
+          <fieldset [disabled]="paso() === 'procesando'">
+            <label class="campo">
+              <span>Número de tarjeta</span>
+              <div class="campo__tarjeta">
+                <input #num formControlName="numero" inputmode="numeric" autocomplete="cc-number"
+                  placeholder="0000 0000 0000 0000" (input)="formatearNumero(num)" [class.error]="invalido('numero')" />
+                @if (franquicia()) {
+                  <span class="franquicia">{{ franquicia() }}</span>
+                }
+              </div>
+              @if (invalido('numero')) {
+                <small class="msg-error">
+                  @if (formPago.controls.numero.hasError('required')) { Ingresa el número de la tarjeta. }
+                  @else if (formPago.controls.numero.hasError('franquicia')) { Solo aceptamos Visa, Mastercard o American Express. }
+                  @else { El número de tarjeta no es válido. }
+                </small>
+              }
+            </label>
+
+            <label class="campo">
+              <span>Nombre del titular</span>
+              <input formControlName="titular" autocomplete="cc-name" placeholder="Como aparece en la tarjeta"
+                [class.error]="invalido('titular')" />
+              @if (invalido('titular')) {
+                <small class="msg-error">Escribe el nombre completo (solo letras).</small>
+              }
+            </label>
+
+            <div class="campo-doble">
+              <label class="campo">
+                <span>Vencimiento</span>
+                <input #venc formControlName="vencimiento" inputmode="numeric" autocomplete="cc-exp"
+                  placeholder="MM/AA" (input)="formatearVencimiento(venc)" [class.error]="invalido('vencimiento')" />
+                @if (invalido('vencimiento')) {
+                  <small class="msg-error">
+                    {{ formPago.controls.vencimiento.hasError('vencida') ? 'La tarjeta está vencida.' : 'Usa el formato MM/AA.' }}
+                  </small>
+                }
+              </label>
+
+              <label class="campo">
+                <span>CVV</span>
+                <input #cvv formControlName="cvv" inputmode="numeric" autocomplete="cc-csc" type="password"
+                  placeholder="123" (input)="soloDigitos(cvv, 4, 'cvv')" [class.error]="invalido('cvv')" />
+                @if (invalido('cvv')) {
+                  <small class="msg-error">3 o 4 dígitos.</small>
+                }
+              </label>
+            </div>
+
+            <div class="campo-doble">
+              <label class="campo">
+                <span>Cédula del titular</span>
+                <input #doc formControlName="documento" inputmode="numeric" placeholder="Número de documento"
+                  (input)="soloDigitos(doc, 10, 'documento')" [class.error]="invalido('documento')" />
+                @if (invalido('documento')) {
+                  <small class="msg-error">Entre 6 y 10 dígitos.</small>
+                }
+              </label>
+
+              <label class="campo">
+                <span>Cuotas</span>
+                <select formControlName="cuotas">
+                  @for (c of cuotasDisponibles; track c) {
+                    <option [ngValue]="c">{{ c }} {{ c === 1 ? 'cuota' : 'cuotas' }}</option>
+                  }
+                </select>
+              </label>
+            </div>
+
+            <div class="acciones-pago">
+              <button type="button" class="btn-secundario" (click)="volverAlCarrito()">
+                <i class="bi bi-arrow-left"></i> Volver al carrito
+              </button>
+              <button type="submit" class="btn-jaj">
+                @if (paso() === 'procesando') {
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Procesando…
+                } @else {
+                  <i class="bi bi-lock-fill"></i> Pagar {{ carrito.total() | currency:'COP':'symbol-narrow':'1.0-0' }}
+                }
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+
+      <aside class="resumen">
+        <h2>Tu pedido</h2>
+        @for (item of carrito.items(); track item.id) {
+          <div class="resumen__fila resumen__producto">
+            <span>{{ item.cantidad }} × {{ item.nombre }}</span>
+            <span>{{ subtotalItem(item) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        }
+        <div class="resumen__fila resumen__total">
+          <span>Total</span>
+          <span>{{ carrito.total() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </aside>
+    </div>
+  }
+
+  <!-- ================= RECHAZADO ================= -->
+
+  @if (paso() === 'rechazado') {
+    <section class="estado estado--error">
+      <i class="bi bi-x-circle" aria-hidden="true"></i>
+      <h2>El banco rechazó el pago</h2>
+      <p>No se hizo ningún cobro y tus productos siguen en el carrito. Intenta con otra tarjeta.</p>
+      <div class="acciones-pago acciones-pago--centro">
+        <button type="button" class="btn-secundario" (click)="volverAlCarrito()">Ver carrito</button>
+        <button type="button" class="btn-jaj" (click)="reintentar()">Intentar de nuevo</button>
+      </div>
+    </section>
+  }
+
+  <!-- ================= APROBADO ================= -->
+
+  @if (paso() === 'aprobado' && recibo(); as r) {
+    <section class="estado">
+      <i class="bi bi-check-circle" aria-hidden="true"></i>
+      <h2>Gracias por tu compra</h2>
+      <p>Referencia <strong>{{ r.referencia }}</strong> · {{ r.fecha.toLocaleString('es-CO') }}</p>
+
+      <div class="recibo">
+        @for (item of r.items; track item.id) {
+          <div class="resumen__fila">
+            <span>{{ item.cantidad }} × {{ item.nombre }}</span>
+            <span>{{ subtotalItem(item) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        }
+        <div class="resumen__fila resumen__total">
+          <span>Total pagado</span>
+          <span>{{ r.total | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        <p class="resumen__nota">
+          {{ r.franquicia }} terminada en {{ r.ultimos4 }} · {{ r.cuotas }} {{ r.cuotas === 1 ? 'cuota' : 'cuotas' }}
+        </p>
+      </div>
+
+      <a routerLink="/productos" class="btn-jaj">Seguir comprando</a>
+    </section>
+  }
+</main>
