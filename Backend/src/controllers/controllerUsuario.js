@@ -67,6 +67,16 @@ const usuarioPublico = (usuario) => {
     return datos;
 };
 
+const eliminarArchivoSubido = async (ruta) => {
+    try {
+        await fs.promises.unlink(ruta);
+    } catch (error) {
+        if (error.code !== 'ENOENT') {
+            console.error('No se pudo limpiar el archivo subido:', error);
+        }
+    }
+};
+
 const contUsuario = {
 
     registerPublic: async (req, res) => {
@@ -143,6 +153,78 @@ const contUsuario = {
             return res.status(500).json({
                 resultado: 'mal',
                 mensaje: 'Ocurrio un error al obtener el perfil',
+                datos: null,
+            });
+        }
+    },
+
+    updatePerfil: async (req, res) => {
+        let fotoSubida;
+        try {
+            const usuario = await modelUsuario.findById(req.usuario.id);
+            if (!usuario) {
+                if (req.file) {
+                    await eliminarArchivoSubido(req.file.path);
+                }
+                return res.status(404).json({
+                    resultado: 'mal',
+                    mensaje: 'Usuario no encontrado',
+                    datos: null,
+                });
+            }
+
+            const nombre = typeof req.body?.nombre === 'string' ? req.body.nombre.trim() : '';
+            const apellido = typeof req.body?.apellido === 'string' ? req.body.apellido.trim() : '';
+            if (!nombre || !apellido) {
+                if (req.file) {
+                    await eliminarArchivoSubido(req.file.path);
+                }
+                return res.status(400).json({
+                    resultado: 'mal',
+                    mensaje: 'El nombre y el apellido son obligatorios',
+                    datos: null,
+                });
+            }
+
+            const fotoAnterior = usuario.Foto;
+            usuario.nombre = nombre;
+            usuario.apellido = apellido;
+            if (req.file) {
+                fotoSubida = req.file.path;
+                usuario.Foto = req.file.filename;
+            }
+
+            const usuarioActualizado = await usuario.save();
+
+            if (
+                req.file &&
+                fotoAnterior &&
+                fotoAnterior !== 'default-user.png' &&
+                path.basename(fotoAnterior) === fotoAnterior
+            ) {
+                const rutaFotoAnterior = path.join('imagenes', fotoAnterior);
+                try {
+                    await fs.promises.unlink(rutaFotoAnterior);
+                } catch (error) {
+                    if (error.code !== 'ENOENT') {
+                        console.error('No se pudo eliminar la foto de perfil anterior:', error);
+                    }
+                }
+            }
+
+            return res.json({
+                resultado: 'bien',
+                mensaje: 'Perfil actualizado satisfactoriamente',
+                datos: usuarioPublico(usuarioActualizado),
+            });
+        } catch (error) {
+            if (fotoSubida) {
+                await eliminarArchivoSubido(fotoSubida);
+            }
+            console.error('Error actualizando el perfil:', error);
+            return res.status(500).json({
+                resultado: 'mal',
+                mensaje: 'Error al actualizar el perfil',
                 datos: null,
             });
         }

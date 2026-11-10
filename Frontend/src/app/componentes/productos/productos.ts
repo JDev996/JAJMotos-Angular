@@ -17,7 +17,7 @@ interface Especificacion {
   etiqueta: string;
 }
 
-/** Forma común que usa la tarjeta, sin importar si viene de motos, repuestos o accesorios */
+/** Estilo de la tarjeta*/
 interface Producto {
   id: string;
   nombre: string;
@@ -62,7 +62,7 @@ export class Productos implements OnInit {
 
   imagenBaseURL = 'http://localhost:8080/imagenes/';
 
-  // Pestañas de navegación: se muestran aunque los datos aún no hayan llegado
+  // Pestañas de navegación
   readonly secciones = [
     { id: 'motos', titulo: 'Motos' },
     { id: 'repuestos', titulo: 'Repuestos' },
@@ -100,8 +100,6 @@ export class Productos implements OnInit {
   }
 
   ngOnInit(): void {
-    // Desactivado: las secciones de /motos, /repuestos y /accesorios se reemplazaron por los productos de /products con el filtro lateral.
-    // this.cargarCatalogo();
     this.cargarSecciones();
   }
 

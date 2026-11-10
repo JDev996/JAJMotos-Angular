@@ -6,10 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CrudProductos } from '../admin/crud-productos/crud-productos';
-import { CrudMotos } from '../admin/crud-motos/crud-motos';
-import { CrudRespuestos } from '../admin/crud-respuestos/crud-respuestos';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 const adminSections = ['Usuarios', 'Productos', 'Motos', 'Repuestos'] as const;
 
@@ -48,7 +45,7 @@ function isUsuario(value: unknown): value is Usuario {
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
-  imports: [ReactiveFormsModule, CrudProductos, CrudMotos, CrudRespuestos],
+  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.css',
 })
@@ -57,7 +54,6 @@ export class AdminPanelComponent implements OnInit {
   private readonly router = inject(Router);
 
   readonly sections = adminSections;
-  activeSection: AdminSection = 'Usuarios';
   @ViewChild('fotoInput') private fotoInput?: ElementRef<HTMLInputElement>;
 
   readonly usuarioForm = new FormGroup({
@@ -95,6 +91,12 @@ export class AdminPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuarios();
+  }
+
+  get activeSection(): AdminSection {
+    const currentPath = this.router.url.split(/[?#]/, 1)[0];
+    const section = currentPath.split('/').pop();
+    return adminSections.find((item) => item.toLowerCase() === section) ?? 'Usuarios';
   }
 
   cargarUsuarios(): void {
@@ -238,10 +240,6 @@ export class AdminPanelComponent implements OnInit {
     }
 
     window.alert(backendMessage ?? 'Error al cargar los datos. Intenta de nuevo más tarde.');
-  }
-
-  selectSection(section: AdminSection): void {
-    this.activeSection = section;
   }
 
   isSection(section: AdminSection): boolean {
