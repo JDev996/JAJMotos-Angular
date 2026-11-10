@@ -61,7 +61,3 @@
 .burbujaMotero .autorChat {
   color: #fff;
 }
-.escribiendo {
-  color: var(--color-texto-secundario);
-  font-style: italic;
-}
