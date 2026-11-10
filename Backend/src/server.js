@@ -8,6 +8,7 @@ import routerMotos from './routes/routerMotos.js';
 import routerVentas from './routes/routerVentas.js';
 import loginRouter from './routes/routerLogin.js';  
 import routerProducts from './routes/routerProducts.js';
+import routerAsesor from './routes/routerAsesor.js';
 import controllerUsuario from './controllers/controllerUsuario.js';
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/repuestos', routerRespuestos);
 app.use('/motos', routerMotos);
 app.use('/ventas', routerVentas);
 app.use('/products', routerProducts);
+app.use('/asesor', routerAsesor);
 app.use('/imagenes', express.static('imagenes'));
 app.get('/', (req, res) => {
 

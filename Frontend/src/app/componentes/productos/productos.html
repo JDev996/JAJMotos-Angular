@@ -11,16 +11,6 @@
   </div>
 </section>
 
-<!-- Desactivado: el filtro por marca aplicaba a las secciones que leían /motos, /repuestos y /accesorios. -->
-<!--
-@if (marcaFiltro) {
-  <div class="aviso-marca">
-    Mostrando productos de <strong>{{ marcaFiltro }}</strong>
-    <button type="button" class="filtro-precio__limpiar" (click)="quitarFiltroMarca()">Ver todo</button>
-  </div>
-}
--->
-
 <div class="catalogo">
   <aside class="filtros">
     <div class="filtros__grupo">
@@ -49,88 +39,6 @@
   </aside>
 
   <div class="catalogo__resultados">
-    <!-- Desactivado: estas secciones leían /motos, /repuestos y /accesorios. Se reemplazaron por los productos de /products con el filtro lateral. -->
-    <!--
-    <main>
-      @if (cargando()) {
-        <p class="catalogo__estado">Cargando catálogo...</p>
-      }
-
-      @for (cat of categoriasVisibles(); track cat.id) {
-        <section [id]="cat.id" class="categoria">
-          <h2 class="categoria__titulo">{{ cat.titulo }}</h2>
-
-          @if (cat.error) {
-            <p class="catalogo__estado catalogo__estado--error">
-              No pudimos cargar {{ cat.titulo.toLowerCase() }}.
-              <button type="button" class="filtro-precio__limpiar" (click)="cargarCatalogo()">Reintentar</button>
-            </p>
-          }
-
-          <div class="productos-grid">
-            @for (p of productosPaginados(cat); track p.id) {
-              <article class="producto-card" [class.producto-card--expandida]="expandidas.has(p.id)">
-
-                <div class="producto-card__galeria-wrap">
-                  <div #galeria class="producto-card__galeria">
-                    @for (img of p.imagenes; track img; let i = $index) {
-                      <div class="producto-card__slide">
-                        <img [src]="img" [alt]="p.nombre + ' - vista ' + (i + 1)">
-                      </div>
-                    }
-                  </div>
-                  @if (p.imagenes.length > 1) {
-                    <button type="button" class="producto-card__flecha producto-card__flecha--prev"
-                      (click)="deslizarGaleria(galeria, -1)" aria-label="Imagen anterior">‹</button>
-                    <button type="button" class="producto-card__flecha producto-card__flecha--next"
-                      (click)="deslizarGaleria(galeria, 1)" aria-label="Imagen siguiente">›</button>
-                  }
-                </div>
-
-                <div class="producto-card__body">
-                  <span class="producto-card__marca">{{ p.marca }}</span>
-                  <h3 class="producto-card__nombre">{{ p.nombre }}</h3>
-                  <span class="producto-card__precio">$ {{ p.precio.toLocaleString('es-CO') }}</span>
-                  <div class="producto-card__acciones">
-                    <button type="button" class="producto-card__boton" [disabled]="p.stock <= 0" (click)="agregarAlCarrito(p)">
-                      {{ p.stock > 0 ? 'Agregar al carrito' : 'Agotado' }}
-                    </button>
-                    @if (p.especificaciones) {
-                      <button type="button" class="producto-card__boton producto-card__boton--secundario"
-                        (click)="toggleEspecificaciones(p.id)">
-                        {{ expandidas.has(p.id) ? 'Ocultar especificaciones' : 'Ver especificaciones' }}
-                      </button>
-                    }
-                  </div>
-                </div>
-
-                @if (p.especificaciones) {
-                  <div class="producto-card__especificaciones">
-                    @for (e of p.especificaciones; track e.etiqueta) {
-                      <div class="especificacion">
-                        <span class="especificacion__icono">{{ e.icono }}</span>
-                        <span class="especificacion__valor">{{ e.valor }}</span>
-                        <span class="especificacion__etiqueta">{{ e.etiqueta }}</span>
-                      </div>
-                    }
-                  </div>
-                }
-              </article>
-            } @empty {
-              @if (!cat.error) {
-                <p class="categoria__sin-resultados">No hay productos que coincidan con el filtro.</p>
-              }
-            }
-          </div>
-
-          @if (productosFiltrados(cat).length > visibles[cat.id]) {
-            <button type="button" class="mostrar-mas" (click)="mostrarMas(cat.id)">Mostrar más</button>
-          }
-        </section>
-      }
-    </main>
-    -->
-
     <div class="container tienda">
       @if (mostrarSeccion('motos')) {
         <div class="mb-5">
