@@ -41,7 +41,9 @@ export class Footer {
     }
   }
 
-  enviarMensajeChat(): void {
+  enviarMensajeChat(event?: Event): void {
+    event?.preventDefault();
+
     const texto = this.textoChat.trim();
     if (!texto || this.enviandoMensaje()) {
       return;

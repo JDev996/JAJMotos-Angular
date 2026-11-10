@@ -65,7 +65,11 @@
         </div>
       }
       @if (enviandoMensaje()) {
-        <p class="text-secondary small mb-0" role="status">El asesor está escribiendo...</p>
+        <div class="burbujaChat burbujaBot indicadorEscritura" role="status" aria-label="El asesor está escribiendo">
+          <span class="autorChat">Asesor</span>
+          <span aria-hidden="true" class="puntosEscritura"><i></i><i></i><i></i></span>
+          <span class="visually-hidden">El asesor está escribiendo...</span>
+        </div>
       }
       @if (errorChat()) {
         <div class="alert alert-danger py-2 px-3 mb-0" role="alert">{{ errorChat() }}</div>
@@ -78,7 +82,7 @@
         <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto para la ciudad.')">Ciudad</button>
         <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="enviandoMensaje()" (click)="usarSugerenciaChat('Busco una moto para viajar por carretera.')">Ruta</button>
       </div>
-      <form class="input-group" (ngSubmit)="enviarMensajeChat()">
+      <form class="input-group" (submit)="enviarMensajeChat($event)">
         <label class="visually-hidden" for="mensaje-chat-flotante">Escribe tu mensaje</label>
         <input
           id="mensaje-chat-flotante"
