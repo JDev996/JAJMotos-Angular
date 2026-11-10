@@ -1,0 +1,70 @@
+<section class="solicitudes">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h3 class="h5 mb-0">Solicitudes de contacto</h3>
+    <button
+      type="button"
+      class="btn btn-outline-light"
+      (click)="cargarMensajes()"
+      [disabled]="cargandoMensajes()"
+    >
+      {{ cargandoMensajes() ? 'Actualizando...' : 'Actualizar' }}
+    </button>
+  </div>
+
+  @if (errorMensajes()) {
+    <div class="alert alert-danger" role="alert">{{ errorMensajes() }}</div>
+  }
+  @if (exitoMensajes()) {
+    <div class="alert alert-success" role="status">{{ exitoMensajes() }}</div>
+  }
+
+  @if (cargandoMensajes() && mensajes().length === 0) {
+    <p role="status">Cargando solicitudes...</p>
+  } @else if (mensajes().length === 0) {
+    <p class="mb-0">No hay solicitudes de contacto para mostrar.</p>
+  } @else {
+    <div class="d-grid gap-3">
+      @for (mensaje of mensajes(); track mensaje._id) {
+        <article class="solicitud" [class.solicitud-pendiente]="mensaje.estado !== 'respondido'">
+          <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+            <h4 class="h6 mb-0">{{ mensaje.nombre }} &lt;{{ mensaje.correo }}&gt;</h4>
+            <span
+              class="badge"
+              [class.text-bg-warning]="mensaje.estado !== 'respondido'"
+              [class.text-bg-success]="mensaje.estado === 'respondido'"
+            >
+              {{ mensaje.estado === 'respondido' ? 'Respondido' : 'Pendiente' }}
+            </span>
+          </div>
+          <p class="mb-1"><strong>Asunto:</strong> {{ mensaje.asunto }}</p>
+          <p class="mb-3 text-break"><strong>Mensaje:</strong> {{ mensaje.mensaje }}</p>
+
+          @if (mensaje.estado === 'respondido') {
+            <div class="respuesta">
+              <strong>Respuesta enviada:</strong>
+              <p class="mb-0 mt-1 text-break">{{ mensaje.respuesta }}</p>
+            </div>
+          } @else {
+            <label class="form-label" [for]="'respuesta-' + mensaje._id">Tu respuesta</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              [id]="'respuesta-' + mensaje._id"
+              [value]="respuestas()[mensaje._id] ?? ''"
+              (input)="actualizarRespuesta(mensaje._id, $event)"
+              placeholder="Escribe una respuesta..."
+            ></textarea>
+            <button
+              type="button"
+              class="btn btn-danger mt-3"
+              [disabled]="!respuestas()[mensaje._id]?.trim() || respondiendoIds().has(mensaje._id)"
+              (click)="responderMensaje(mensaje._id, respuestas()[mensaje._id] ?? '')"
+            >
+              {{ respondiendoIds().has(mensaje._id) ? 'Enviando...' : 'Enviar respuesta' }}
+            </button>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>
