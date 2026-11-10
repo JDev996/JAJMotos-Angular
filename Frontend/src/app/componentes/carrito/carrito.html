@@ -18,7 +18,8 @@
     </ol>
   </header>
 
-  <!-- ================= PASO 1: CARRITO ================= -->
+  <!-- =================  CARRITO ================= -->
+
   @if (paso() === 'carrito') {
     @if (carrito.items().length === 0) {
       <section class="vacio">
@@ -97,7 +98,8 @@
     }
   }
 
-  <!-- ================= PASO 2: PASARELA ================= -->
+  <!-- ================= PASARELA ================= -->
+
   @if (paso() === 'pago' || paso() === 'procesando') {
     <div class="carrito-layout">
       <section class="pasarela">
@@ -214,6 +216,7 @@
   }
 
   <!-- ================= RECHAZADO ================= -->
+
   @if (paso() === 'rechazado') {
     <section class="estado estado--error">
       <i class="bi bi-x-circle" aria-hidden="true"></i>
@@ -226,7 +229,8 @@
     </section>
   }
 
-  <!-- ================= PASO 3: APROBADO ================= -->
+  <!-- ================= APROBADO ================= -->
+
   @if (paso() === 'aprobado' && recibo(); as r) {
     <section class="estado">
       <i class="bi bi-check-circle" aria-hidden="true"></i>

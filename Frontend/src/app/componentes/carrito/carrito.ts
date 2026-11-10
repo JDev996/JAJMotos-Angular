@@ -7,10 +7,12 @@ import { CarritoService, ItemCarrito } from '../../services/carrito-service';
 type Paso = 'carrito' | 'pago' | 'procesando' | 'aprobado' | 'rechazado';
 type Franquicia = 'Visa' | 'Mastercard' | 'American Express' | null;
 
-/** Tarjeta de prueba que la pasarela simulada siempre rechaza. */
+/** Tarjeta de prueba de rechazo */
+
 const TARJETA_RECHAZADA = '4000000000000002';
 
-/** Resumen que se muestra después de pagar (el carrito ya quedó vacío). */
+/** simulacion de pago (el carrito ya quedó vacío). */
+
 interface Recibo {
   referencia: string;
   fecha: Date;
@@ -89,6 +91,7 @@ export class Carrito {
   }
 
   /** Inserta la barra de MM/AA automáticamente. */
+
   formatearVencimiento(input: HTMLInputElement): void {
     const digitos = input.value.replace(/\D/g, '').slice(0, 4);
     const formateado = digitos.length > 2 ? `${digitos.slice(0, 2)}/${digitos.slice(2)}` : digitos;
@@ -108,10 +111,9 @@ export class Carrito {
   }
 
   /**
-   * Pasarela de pagos SIMULADA (modo prueba): no se cobra nada real.
-   * Espera unos segundos como si consultara al banco y aprueba o rechaza
-   * según la tarjeta de prueba usada.
+   * Pasarela de pagos SIMULADA 
    */
+
   pagar(): void {
     if (this.formPago.invalid) {
       this.formPago.markAllAsTouched();
@@ -158,7 +160,7 @@ function detectarFranquicia(digitos: string): Franquicia {
   return null;
 }
 
-/** Algoritmo de Luhn: el mismo chequeo que usan las pasarelas reales para detectar números mal digitados. */
+/** Algoritmo LUUHN */
 function pasaLuhn(digitos: string): boolean {
   let suma = 0;
   let doblar = false;
