@@ -10,10 +10,38 @@
   gap: 12px;
 }
 
+.bienvenida-usuario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-profile-photo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bienvenida-usuario:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
 .login-icono {
   color: rgba(255, 255, 255, 0.65);
   display: flex;
   transition: color 0.2s;
+}
+
+.profile-trigger {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 .login-icono:hover,

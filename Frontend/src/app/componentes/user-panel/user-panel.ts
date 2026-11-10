@@ -30,6 +30,7 @@ interface UsuarioActual {
   correo: string;
   rol: string;
   apellido?: string;
+  Foto?: string;
 }
 
 interface PerfilResponse {
