@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+.admin-placeholder {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  color: #f5f5f5;
+  border: 1px solid #333;
+  border-radius: 0.5rem;
+  background: #1a1a1a;
+}
+
+.admin-placeholder .form-label {
+  color: #b8b8b8;
+}
+
+.admin-placeholder .form-control {
+  color: #f5f5f5;
+  background-color: #141414;
+  border: 1px solid #444;
+}
+
+.admin-placeholder .form-control:focus {
+  color: #fff;
+  background-color: #141414;
+  border-color: #c8102e;
+  box-shadow: 0 0 0 0.2rem rgb(200 16 46 / 20%);
+}
+
+.admin-add-button,
+.admin-placeholder .btn-danger {
+  color: #fff;
+  background-color: #c8102e;
+  border-color: #c8102e;
+}
+
+.admin-add-button:hover,
+.admin-placeholder .btn-danger:hover:not(:disabled) {
+  background-color: #a50d25;
+  border-color: #a50d25;
+}
+
+.table {
+  --bs-table-color: #f5f5f5;
+  --bs-table-bg: transparent;
+  --bs-table-striped-color: #f5f5f5;
+  --bs-table-striped-bg: #ffffff08;
+  --bs-table-border-color: #333;
+}
+
+.accesorio-image {
+  width: 80px;
+  height: 64px;
+  object-fit: contain;
+}

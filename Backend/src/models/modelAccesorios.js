@@ -1,6 +1,11 @@
 import { Schema, model } from 'mongoose';
 
 const esquemaAccesorio = new Schema({
+nombre: {
+    type: String,
+    trim: true,
+    default: ''
+},
 marca: {
     type: String,
     required: true,
@@ -11,6 +16,11 @@ referencia: {
     required: true,
     trim: true,
     
+},
+descripcion: {
+    type: String,
+    trim: true,
+    default: ''
 },
 precio: {
     type: Number,
