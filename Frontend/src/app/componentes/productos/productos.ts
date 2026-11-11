@@ -1,15 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, catchError, forkJoin, map, of } from 'rxjs';
 
 import { MotosService } from '../../services/motos-service';
 import { RespuestosService } from '../../services/respuestos-service';
 import { AccesoriosService } from '../../services/accesorios-service';
-import { ProductosService } from '../../services/productos-service';
 import { Moto } from '../../interfaces/motos';
 import { Repuesto } from '../../interfaces/respuestos';
 import { Accesorio } from '../../interfaces/accesorios';
-import { Productos as ProductoTienda } from '../../interfaces/productos';
 import { CarritoService } from '../../services/carrito-service';
 
 interface Especificacion {
@@ -26,6 +25,7 @@ interface Producto {
   precio: number;
   stock: number;
   imagenes: string[];
+  descripcion?: string;
   especificaciones?: Especificacion[];
 }
 
@@ -45,7 +45,7 @@ interface RangoPrecio {
 const IMAGEN_BASE_URL = 'http://localhost:8080/imagenes/';
 
 @Component({
-  imports: [],
+  imports: [CurrencyPipe],
   selector: 'app-productos',
   styleUrls: ['./productos.css', './productos-tienda.css'],
   templateUrl: './productos.html',
@@ -55,16 +55,11 @@ export class Productos implements OnInit {
   private motosService = inject(MotosService);
   private repuestosService = inject(RespuestosService);
   private accesoriosService = inject(AccesoriosService);
-  private productosService = inject(ProductosService);
   private carrito = inject(CarritoService);
 
   /** id del último producto agregado, para mostrar "✓ Agregado" un momento. */
   recienAgregado = signal<string | null>(null);
   private timerAgregado?: ReturnType<typeof setTimeout>;
-
-  productosMotos = signal<ProductoTienda[]>([]);
-  productosRepuestos = signal<ProductoTienda[]>([]);
-  productosAccesorios = signal<ProductoTienda[]>([]);
 
   imagenBaseURL = 'http://localhost:8080/imagenes/';
 
@@ -106,26 +101,7 @@ export class Productos implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarSecciones();
-  }
-
-  cargarSecciones(): void {
-    this.productosService.getAll().subscribe({
-      next: (todos) => {
-        this.productosMotos.set(
-          todos.filter(prod => prod.categoria === 'motos')
-        );
-
-        this.productosRepuestos.set(
-          todos.filter(prod => prod.categoria === 'repuestos')
-        );
-
-        this.productosAccesorios.set(
-          todos.filter(prod => prod.categoria === 'accesorios')
-        );
-      },
-      error: (err) => console.error('Error al cargar productos', err)
-    });
+    this.cargarCatalogo();
   }
 
   /** Pide las tres categorías al backend en paralelo. Si una falla, las otras se muestran igual. */
@@ -147,9 +123,16 @@ export class Productos implements OnInit {
   }
 
   /** Extrae `datos` de la respuesta { resultado, mensaje, datos }. Devuelve null si hubo error. */
-  private pedir<T>(peticion: Observable<any>): Observable<T[] | null> {
+  private pedir<T>(peticion: Observable<unknown>): Observable<T[] | null> {
     return peticion.pipe(
-      map(resp => (Array.isArray(resp?.datos) ? (resp.datos as T[]) : null)),
+      map((response) => {
+        if (typeof response !== 'object' || response === null) return null;
+        const body = response as Record<string, unknown>;
+        const success = body['resultado'] === 'bien' || body['result'] === 'fine';
+        return success && Array.isArray(body['datos'] ?? body['data'])
+          ? (body['datos'] ?? body['data']) as T[]
+          : null;
+      }),
       catchError(err => {
         console.error('Error al cargar el catálogo', err);
         return of(null);
@@ -160,7 +143,7 @@ export class Productos implements OnInit {
   private desdeMoto(m: Moto): Producto {
     return {
       id: m._id ?? `${m.marca}-${m.referencia}`,
-      nombre: m.referencia,
+      nombre: m.modelo || m.referencia,
       marca: m.marca,
       precio: Number(m.precio),
       stock: Number(m.stock),
@@ -175,13 +158,17 @@ export class Productos implements OnInit {
   }
 
   private desdeItem(item: Repuesto | Accesorio, tipo: string): Producto {
+    const nombre = 'nombre' in item && typeof item.nombre === 'string' && item.nombre
+      ? item.nombre
+      : item.referencia;
     return {
       id: item._id ?? `${tipo}-${item.marca}-${item.referencia}`,
-      nombre: item.referencia,
+      nombre,
       marca: item.marca,
       precio: Number(item.precio),
       stock: Number(item.stock),
       imagenes: [IMAGEN_BASE_URL + item.Foto],
+      ...('descripcion' in item && item.descripcion ? { descripcion: item.descripcion } : {}),
     };
   }
 
@@ -206,19 +193,6 @@ export class Productos implements OnInit {
   /** Solo los primeros N (para "Mostrar más") */
   productosPaginados(cat: Categoria): Producto[] {
     return this.productosFiltrados(cat).slice(0, this.visibles[cat.id]);
-  }
-
-  enPrecio(precio: number): boolean {
-    return (this.precioMin === null || precio >= this.precioMin) &&
-      (this.precioMax === null || precio <= this.precioMax);
-  }
-
-  filtrarPorPrecio(lista: ProductoTienda[]): ProductoTienda[] {
-    return lista.filter(prod => this.enPrecio(Number(prod.precio)));
-  }
-
-  mostrarSeccion(id: string): boolean {
-    return !this.categoriaFiltro || this.categoriaFiltro === id;
   }
 
   elegirCategoria(id: string | null) {
@@ -279,14 +253,14 @@ export class Productos implements OnInit {
     galeria.scrollBy({ left: direccion * galeria.clientWidth, behavior: 'smooth' });
   }
 
-  agregarAlCarrito(prod: ProductoTienda, categoria: string) {
-    const id = prod._id ?? `${categoria}-${prod.modelo}`;
+  agregarAlCarrito(prod: Producto, categoria: string) {
+    const id = prod.id;
     this.carrito.agregar({
       id,
-      nombre: prod.modelo,
+      nombre: prod.nombre,
       descripcion: prod.descripcion,
-      precio: Number(prod.precio),
-      imagen: this.imagenBaseURL + prod.imagen,
+      precio: prod.precio,
+      imagen: prod.imagenes[0],
       categoria,
     });
 

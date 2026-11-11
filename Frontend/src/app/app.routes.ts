@@ -14,6 +14,7 @@ import { Carrito } from './componentes/carrito/carrito';
 import { CrudProductos } from './componentes/admin/crud-productos/crud-productos';
 import { CrudMotos } from './componentes/admin/crud-motos/crud-motos';
 import { CrudRespuestos } from './componentes/admin/crud-respuestos/crud-respuestos';
+import { CrudAccesorios } from './componentes/admin/crud-accesorios/crud-accesorios';
 import { AdminSolicitudesComponent } from './componentes/admin-panel/admin-solicitudes';
 import { authGuard } from './guards/auth.guard';
 
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: 'productos', title: 'Productos', component: CrudProductos },
       { path: 'motos', title: 'Motos', component: CrudMotos },
       { path: 'repuestos', title: 'Repuestos', component: CrudRespuestos },
+      { path: 'accesorios', title: 'Accesorios', component: CrudAccesorios },
       { path: 'solicitudes', title: 'Solicitudes', component: AdminSolicitudesComponent },
     ],
   },

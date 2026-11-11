@@ -1,0 +1,98 @@
+<header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+  <h2 class="h4 mb-0">Gestión de Accesorios</h2>
+  <button type="button" class="btn btn-danger admin-add-button" (click)="nuevo()">
+    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Nuevo Accesorio
+  </button>
+</header>
+
+@if (formulario()) {
+  <section class="admin-placeholder mb-4">
+    <h3 class="h5 mb-3">{{ modo() === 'crear' ? 'Crear accesorio' : 'Editar accesorio' }}</h3>
+    <form #accesorioForm="ngForm" (ngSubmit)="guardar()" novalidate>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="accesorio-nombre" class="form-label">Nombre</label>
+          <input id="accesorio-nombre" class="form-control" [(ngModel)]="form.nombre" name="nombre" required />
+        </div>
+        <div class="col-md-6">
+          <label for="accesorio-marca" class="form-label">Marca</label>
+          <input id="accesorio-marca" class="form-control" [(ngModel)]="form.marca" name="marca" required />
+        </div>
+        <div class="col-md-6">
+          <label for="accesorio-referencia" class="form-label">Referencia</label>
+          <input id="accesorio-referencia" class="form-control" [(ngModel)]="form.referencia" name="referencia" required />
+        </div>
+        <div class="col-12">
+          <label for="accesorio-descripcion" class="form-label">Descripción</label>
+          <textarea id="accesorio-descripcion" class="form-control" [(ngModel)]="form.descripcion" name="descripcion" rows="3"></textarea>
+        </div>
+        <div class="col-md-6">
+          <label for="accesorio-precio" class="form-label">Precio</label>
+          <input id="accesorio-precio" type="number" class="form-control" [(ngModel)]="form.precio" name="precio" min="0" required />
+        </div>
+        <div class="col-md-6">
+          <label for="accesorio-stock" class="form-label">Stock</label>
+          <input id="accesorio-stock" type="number" class="form-control" [(ngModel)]="form.stock" name="stock" min="0" required />
+        </div>
+        <div class="col-12">
+          <label for="accesorio-imagen" class="form-label">Imagen {{ modo() === 'editar' ? '(opcional)' : '' }}</label>
+          <input
+            #imagenInput
+            id="accesorio-imagen"
+            type="file"
+            class="form-control"
+            accept="image/*"
+            [required]="modo() === 'crear'"
+            (change)="archivoSeleccionado($event)"
+          />
+        </div>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <button type="submit" class="btn btn-danger" [disabled]="guardando() || accesorioForm.invalid">
+          {{ guardando() ? 'Guardando...' : modo() === 'crear' ? 'Crear accesorio' : 'Guardar cambios' }}
+        </button>
+        <button type="button" class="btn btn-outline-light" (click)="cancelar()" [disabled]="guardando()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (accesorios().length === 0) {
+  <p class="mt-4 text-secondary">No hay accesorios disponibles.</p>
+} @else {
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Imagen</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Referencia</th>
+          <th scope="col">Marca</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (accesorio of accesorios(); track accesorio._id) {
+          <tr>
+            <td><img class="accesorio-image" [src]="imagenBaseURL + accesorio.Foto" [alt]="accesorio.nombre || accesorio.referencia" /></td>
+            <td>{{ accesorio.nombre || accesorio.referencia }}</td>
+            <td>{{ accesorio.referencia }}</td>
+            <td>{{ accesorio.marca }}</td>
+            <td>{{ accesorio.descripcion || '—' }}</td>
+            <td>{{ accesorio.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td>{{ accesorio.stock }}</td>
+            <td class="text-nowrap">
+              <button type="button" class="btn btn-warning btn-sm me-2" (click)="editar(accesorio)">Editar</button>
+              <button type="button" class="btn btn-danger btn-sm" (click)="eliminar(accesorio)">Eliminar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
