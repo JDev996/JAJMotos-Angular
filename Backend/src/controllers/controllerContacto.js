@@ -1,6 +1,14 @@
 import MensajeContacto from '../models/modelMensajeContacto.js';
 import nodemailer from 'nodemailer';
 
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_NODE,
+        pass: process.env.PASS_NODE
+    }
+});
+
 const controllerContacto = {
     crearMensaje: async (req, res) => {
         try {
@@ -22,14 +30,6 @@ const controllerContacto = {
             });
 
             try {
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: process.env.EMAIL_NODE,
-                        pass: process.env.PASS_NODE
-                    }
-                });
-
                 await transporter.sendMail({
                     from: process.env.EMAIL_NODE,
                     to: correo.trim(),
@@ -118,9 +118,40 @@ const controllerContacto = {
                 });
             }
 
+            let correoEnviado = true;
+            try {
+                const asuntoOriginal = mensajeActualizado.asunto.trim();
+                const asuntoRespuesta = /^re\s*:/i.test(asuntoOriginal)
+                    ? asuntoOriginal
+                    : `Re: ${asuntoOriginal}`;
+
+                await transporter.sendMail({
+                    from: process.env.EMAIL_NODE,
+                    to: mensajeActualizado.correo,
+                    subject: asuntoRespuesta,
+                    text: [
+                        `Hola ${mensajeActualizado.nombre},`,
+                        '',
+                        'Recibimos tu solicitud:',
+                        mensajeActualizado.mensaje,
+                        '',
+                        'Respuesta de JAJ Motos:',
+                        respuesta
+                    ].join('\n')
+                });
+            } catch (emailError) {
+                correoEnviado = false;
+                console.error(
+                    'La respuesta se guardó, pero no se pudo enviar el correo al remitente:',
+                    emailError
+                );
+            }
+
             return res.json({
                 resultado: 'bien',
-                mensaje: 'Respuesta enviada'
+                mensaje: correoEnviado
+                    ? 'Respuesta guardada y correo enviado al remitente'
+                    : 'Respuesta guardada, pero no se pudo enviar el correo al remitente'
             });
         } catch (error) {
             console.error('Error al responder mensaje de contacto:', error);
