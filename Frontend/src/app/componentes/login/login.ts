@@ -120,7 +120,7 @@ export class Login {
             if (role === 'admin') {
               destination = '/admin';
             } else {
-              destination = '/productos';
+              destination = '/user-panel';
             }
 
             window.localStorage.setItem('token', response.datos);

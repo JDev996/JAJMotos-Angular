@@ -56,21 +56,43 @@
 }
 
 .carrito-icono {
-  position: relative;
+  position: fixed;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: calc(14rem + env(safe-area-inset-bottom));
+  z-index: 1035;
+  display: grid;
+  width: 4rem;
+  height: 4rem;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem;
-  border: 0;
-  background: transparent;
+  padding: 0;
+  color: #fff;
+  background: #c8102e;
+  border: 1px solid #ff667e;
+  border-radius: 50%;
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 40%);
   cursor: pointer;
-  font-size: 1.45rem;
+  font-size: 1.5rem;
   line-height: 1;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.carrito-icono:hover {
+  color: #fff;
+  background: #a50d25;
+  box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 45%);
+  transform: translateY(-2px);
+}
+
+.carrito-icono:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
 }
 
 .carrito-badge {
   position: absolute;
-  top: -6px;
-  right: -10px;
+  top: -4px;
+  right: -4px;
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
@@ -193,6 +215,13 @@
 
   .logout-trigger {
     padding: 0.4rem;
+  }
+
+  .carrito-icono {
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: calc(13.5rem + env(safe-area-inset-bottom));
+    width: 3.75rem;
+    height: 3.75rem;
   }
 
   .logout-trigger span {

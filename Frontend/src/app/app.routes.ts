@@ -11,6 +11,7 @@ import { Registro } from './componentes/Registro/registro';
 import { NotFound } from './componentes/not-found/not-found';
 import { AdminPanelComponent } from './componentes/admin-panel/admin-panel';
 import { Carrito } from './componentes/carrito/carrito';
+import { UserPanelComponent } from './componentes/user-panel/user-panel';
 import { CrudProductos } from './componentes/admin/crud-productos/crud-productos';
 import { CrudMotos } from './componentes/admin/crud-motos/crud-motos';
 import { CrudRespuestos } from './componentes/admin/crud-respuestos/crud-respuestos';
@@ -37,8 +38,13 @@ export const routes: Routes = [
     ],
   },
   { path: 'carrito',        title: 'Mi carrito',     component: Carrito,        canActivate: [authGuard], data: { animation: 'Carrito', role: 'user' } },
-  // "Mi garaje" se reemplazó por el carrito; se deja la ruta vieja redirigiendo por si alguien la tiene guardada
-  { path: 'user-panel', redirectTo: 'carrito', pathMatch: 'full' },
+  {
+    path: 'user-panel',
+    title: 'Mi garaje',
+    component: UserPanelComponent,
+    canActivate: [authGuard],
+    data: { animation: 'UserPanel', role: 'user' },
+  },
   { path: 'distribuidores', title: 'Distribuidores', component: Distribuidores, data: { animation: 'Distribuidores' } },
   { path: 'nosotros',       title: 'Nosotros',       component: Nosotros,       data: { animation: 'Nosotros' } },
   { path: 'contacto',       title: 'Contacto',       component: Contacto,       data: { animation: 'Contacto' } },

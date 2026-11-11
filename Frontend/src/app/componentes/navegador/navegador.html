@@ -6,7 +6,7 @@
       @if (perfil()?.nombre; as nombre) {
         <a
           class="bienvenida-usuario"
-          [routerLink]="perfil()?.rol === 'admin' ? '/admin' : '/productos'"
+          [routerLink]="perfil()?.rol === 'admin' ? '/admin' : '/user-panel'"
           title="Ir a mi panel"
         >
           Bienvenido, {{ nombre }}
