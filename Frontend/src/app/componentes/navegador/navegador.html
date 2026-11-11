@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark" (keydown.escape)="cerrarCarrito()">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/home">JAJ Motos</a>
 
@@ -13,13 +13,14 @@
         </a>
       }
       @if (perfil()?.rol !== 'admin') {
-        <a class="login-icono carrito-icono" routerLink="/carrito" routerLinkActive="active"
-          [attr.aria-label]="'Carrito, ' + carrito.cantidadTotal() + ' productos'" title="Mi carrito">
+        <button #carritoTrigger type="button" class="login-icono carrito-icono" (click)="alternarCarrito()"
+          [attr.aria-label]="'Carrito, ' + carrito.cantidadTotal() + ' productos'"
+          [attr.aria-expanded]="carritoAbierto" aria-controls="panel-carrito" title="Mi carrito">
           <i class="bi bi-cart3" aria-hidden="true"></i>
           @if (carrito.cantidadTotal() > 0) {
             <span class="carrito-badge">{{ carrito.cantidadTotal() > 99 ? '99+' : carrito.cantidadTotal() }}</span>
           }
-        </a>
+        </button>
       }
 
       @if (perfil()) {
@@ -52,6 +53,13 @@
         </a>
       }
 
+      @if (perfil() && perfil()?.rol !== 'admin') {
+        <button type="button" class="logout-trigger" (click)="logout()" aria-label="Cerrar sesión" title="Cerrar sesión">
+          <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+          <span>Cerrar sesión</span>
+        </button>
+      }
+
       @if (editandoPerfil) {
         <app-profile-editor (closed)="editandoPerfil = false"></app-profile-editor>
       }
@@ -73,4 +81,65 @@
       </ul>
     </div>
   </div>
+
+  @if (carritoAbierto) {
+    <button class="carrito-backdrop" type="button" aria-label="Cerrar carrito" (click)="cerrarCarrito()"></button>
+  }
+  <aside
+    #carritoPanel
+    id="panel-carrito"
+    class="carrito-drawer"
+    [class.carrito-drawer--abierto]="carritoAbierto"
+    [attr.aria-hidden]="!carritoAbierto"
+    [attr.inert]="carritoAbierto ? null : ''"
+    (keydown)="manejarTecladoCarrito($event)"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Resumen del carrito"
+    tabindex="-1"
+  >
+    <header class="carrito-drawer__header">
+      <div>
+        <p class="carrito-drawer__eyebrow">JAJ MOTOS</p>
+        <h2>Tu carrito <span>({{ carrito.cantidadTotal() }})</span></h2>
+      </div>
+      <button type="button" class="carrito-drawer__cerrar" aria-label="Cerrar carrito" (click)="cerrarCarrito()">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    @if (carrito.items().length > 0) {
+      <div class="carrito-drawer__items">
+        @for (item of carrito.items(); track item.id) {
+          <article class="carrito-drawer__item">
+            <img [src]="item.imagen" [alt]="item.nombre" />
+            <div class="carrito-drawer__detalle">
+              <h3>{{ item.nombre }}</h3>
+              <p>{{ item.cantidad }} × {{ item.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+            </div>
+            <button type="button" class="carrito-drawer__eliminar" [attr.aria-label]="'Quitar ' + item.nombre"
+              (click)="carrito.eliminar(item.id)">
+              <i class="bi bi-trash3" aria-hidden="true"></i>
+            </button>
+          </article>
+        }
+      </div>
+      <footer class="carrito-drawer__footer">
+        <div class="carrito-drawer__total">
+          <span>Total</span>
+          <strong>{{ carrito.total() | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <a class="carrito-drawer__finalizar" routerLink="/carrito" (click)="cerrarCarrito()">
+          Finalizar compra <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="carrito-drawer__ver" routerLink="/carrito" (click)="cerrarCarrito()">Ver carrito completo</a>
+      </footer>
+    } @else {
+      <div class="carrito-drawer__vacio">
+        <i class="bi bi-cart-x" aria-hidden="true"></i>
+        <p>Tu carrito está vacío.</p>
+        <a routerLink="/productos" (click)="cerrarCarrito()">Explorar productos</a>
+      </div>
+    }
+  </aside>
 </nav>

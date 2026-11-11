@@ -40,98 +40,70 @@
 
   <div class="catalogo__resultados">
     <div class="container tienda">
-      @if (mostrarSeccion('motos')) {
-        <div class="mb-5">
-          <h3 class="mb-3 border-bottom pb-2">Motos</h3>
+      @if (cargando()) {
+        <p class="text-muted" role="status">Cargando catálogo…</p>
+      } @else {
+        @for (cat of categoriasVisibles(); track cat.id) {
+          <section class="mb-5" [attr.aria-labelledby]="'catalogo-' + cat.id">
+            <h2 class="mb-3 border-bottom pb-2" [id]="'catalogo-' + cat.id">{{ cat.titulo }}</h2>
 
-          <div class="row g-3">
-            @for (prod of filtrarPorPrecio(productosMotos()); track prod._id) {
-              <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                  <img
-                    [src]="imagenBaseURL + prod.imagen"
-                    class="card-img-top p-2 object-fit-contain"
-                    style="height: 200px;"
-                    [alt]="prod.modelo">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ prod.modelo }}</h5>
-                    <p class="card-text text-muted">{{ prod.descripcion }}</p>
-                    <p class="mb-1"><strong>Color:</strong> {{ prod.color }}</p>
-                    <p class="fw-bold text-primary fs-5 mb-0">${{ prod.precio }}</p>
-                  </div>
-                                    <div class="card-footer bg-transparent border-0 pt-0 pb-3">
-                    <button type="button" class="btn-carrito" [class.btn-carrito--ok]="recienAgregado() === prod._id"
-                      (click)="agregarAlCarrito(prod, prod.categoria ?? 'productos')">
-                      @if (recienAgregado() === prod._id) {
-                        <i class="bi bi-check2"></i> Agregado
-                      } @else {
-                        <i class="bi bi-cart-plus"></i> Agregar al carrito
-                      }
-                    </button>
-                  </div>
-                </div>
+            @if (cat.error) {
+              <div class="alert alert-warning" role="alert">
+                No se pudieron cargar {{ cat.titulo.toLowerCase() }}.
+                <button type="button" class="btn btn-link p-0 ms-1" (click)="cargarCatalogo()">Reintentar</button>
               </div>
-            } @empty {
-              <p class="text-muted">No hay productos en la categoría Motos.</p>
-            }
-          </div>
-        </div>
-      }
-
-      @if (mostrarSeccion('repuestos')) {
-        <div class="mb-5">
-          <h3 class="mb-3 border-bottom pb-2">Repuestos</h3>
-
-          <div class="row g-3">
-            @for (prod of filtrarPorPrecio(productosRepuestos()); track prod._id) {
-              <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                  <img
-                    [src]="imagenBaseURL + prod.imagen"
-                    class="card-img-top p-2 object-fit-contain"
-                    style="height: 200px;"
-                    [alt]="prod.modelo">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ prod.modelo }}</h5>
-                    <p class="card-text text-muted">{{ prod.descripcion }}</p>
-                    <p class="mb-1"><strong>Color:</strong> {{ prod.color }}</p>
-                    <p class="fw-bold text-primary fs-5 mb-0">${{ prod.precio }}</p>
+            } @else {
+              <div class="row g-3">
+                @for (prod of productosPaginados(cat); track prod.id) {
+                  <div class="col-md-4">
+                    <article class="card h-100 shadow-sm">
+                      <img
+                        [src]="prod.imagenes[0]"
+                        class="card-img-top p-2 object-fit-contain"
+                        style="height: 200px;"
+                        [alt]="prod.nombre">
+                      <div class="card-body">
+                        <p class="small text-muted mb-1">{{ prod.marca }}</p>
+                        <h3 class="card-title h5">{{ prod.nombre }}</h3>
+                        @if (prod.descripcion) {
+                          <p class="card-text text-muted">{{ prod.descripcion }}</p>
+                        }
+                        @for (detalle of prod.especificaciones; track detalle.etiqueta) {
+                          <p class="card-text text-muted mb-1">{{ detalle.etiqueta }}: {{ detalle.valor }}</p>
+                        }
+                        <p class="small mb-2">Disponibles: {{ prod.stock }}</p>
+                        <p class="fw-bold text-primary fs-5 mb-0">{{ prod.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+                      </div>
+                      <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                        <button
+                          type="button"
+                          class="btn-carrito"
+                          [class.btn-carrito--ok]="recienAgregado() === prod.id"
+                          [disabled]="prod.stock <= 0"
+                          (click)="agregarAlCarrito(prod, cat.id)">
+                          @if (recienAgregado() === prod.id) {
+                            <i class="bi bi-check2" aria-hidden="true"></i> Agregado
+                          } @else if (prod.stock <= 0) {
+                            Agotado
+                          } @else {
+                            <i class="bi bi-cart-plus" aria-hidden="true"></i> Agregar al carrito
+                          }
+                        </button>
+                      </div>
+                    </article>
                   </div>
-                </div>
+                } @empty {
+                  <p class="text-muted">No hay productos en la categoría {{ cat.titulo }}.</p>
+                }
               </div>
-            } @empty {
-              <p class="text-muted">No hay productos en la categoría Repuestos.</p>
+              @if (productosFiltrados(cat).length > productosPaginados(cat).length) {
+                <button type="button" class="btn btn-outline-light mt-3" (click)="mostrarMas(cat.id)">
+                  Mostrar más
+                </button>
+              }
             }
-          </div>
-        </div>
-      }
-
-      @if (mostrarSeccion('accesorios')) {
-        <div class="mb-5">
-          <h3 class="mb-3 border-bottom pb-2">Accesorios</h3>
-
-          <div class="row g-3">
-            @for (prod of filtrarPorPrecio(productosAccesorios()); track prod._id) {
-              <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                  <img
-                    [src]="imagenBaseURL + prod.imagen"
-                    class="card-img-top p-2 object-fit-contain"
-                    style="height: 200px;"
-                    [alt]="prod.modelo">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ prod.modelo }}</h5>
-                    <p class="card-text text-muted">{{ prod.descripcion }}</p>
-                    <p class="mb-1"><strong>Color:</strong> {{ prod.color }}</p>
-                    <p class="fw-bold text-primary fs-5 mb-0">${{ prod.precio }}</p>
-                  </div>
-                </div>
-              </div>
-            } @empty {
-              <p class="text-muted">No hay productos en la categoría Accesorios.</p>
-            }
-          </div>
-        </div>
+          </section>
+        }
       }
     </div>
   </div>

@@ -49,3 +49,21 @@ h1, h2, h3, .navbar-brand {
   font-family: 'Barlow Condensed', sans-serif;
   text-transform: uppercase;
 }
+
+.carrito-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+  width: 100%;
+  height: 100%;
+  background: #000a;
+  border: 0;
+}
+
+.carrito-drawer__eyebrow {
+  margin: 0 0 .25rem;
+  color: #ff667e;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+}

@@ -24,8 +24,10 @@ const controllerAccesorios = {
                 }
 
                 const newAccesorio = new modelAccesorios({
+                    nombre: req.body.nombre || req.body.referencia,
                     marca: req.body.marca,
                     referencia: req.body.referencia,
+                    descripcion: req.body.descripcion,
                     precio: req.body.precio,
                     stock: req.body.stock,
                     Foto: req.file.filename
@@ -118,8 +120,10 @@ const controllerAccesorios = {
             }
 
             const nuevosDatos = {
+                nombre: req.body.nombre ?? accesorioExistente.nombre ?? req.body.referencia,
                 marca: req.body.marca,
                 referencia: req.body.referencia,
+                descripcion: req.body.descripcion ?? accesorioExistente.descripcion ?? '',
                 precio: req.body.precio,
                 stock: req.body.stock,
                 Foto: req.file ? req.file.filename : accesorioExistente.Foto,

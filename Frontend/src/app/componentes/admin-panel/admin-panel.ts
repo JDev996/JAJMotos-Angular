@@ -7,8 +7,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ProfileState } from '../../services/profile-state';
+import { CarritoService } from '../../services/carrito-service';
 
-const adminSections = ['Usuarios', 'Productos', 'Motos', 'Repuestos', 'Solicitudes'] as const;
+const adminSections = [
+  'Usuarios',
+  'Productos',
+  'Motos',
+  'Repuestos',
+  'Accesorios',
+  'Solicitudes',
+] as const;
 
 type AdminSection = (typeof adminSections)[number];
 
@@ -52,6 +61,8 @@ function isUsuario(value: unknown): value is Usuario {
 export class AdminPanelComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly profileState = inject(ProfileState);
+  private readonly carrito = inject(CarritoService);
 
   readonly sections = adminSections;
   @ViewChild('fotoInput') private fotoInput?: ElementRef<HTMLInputElement>;
@@ -251,6 +262,8 @@ export class AdminPanelComponent implements OnInit {
       window.localStorage.removeItem('token');
     }
 
+    this.profileState.loadForCurrentToken();
+    this.carrito.sincronizarUsuario();
     void this.router.navigate(['/login']);
   }
 }
