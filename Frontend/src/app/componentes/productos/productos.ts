@@ -6,9 +6,11 @@ import { Observable, catchError, forkJoin, map, of } from 'rxjs';
 import { MotosService } from '../../services/motos-service';
 import { RespuestosService } from '../../services/respuestos-service';
 import { AccesoriosService } from '../../services/accesorios-service';
+import { ProductosService } from '../../services/productos-service';
 import { Moto } from '../../interfaces/motos';
 import { Repuesto } from '../../interfaces/respuestos';
 import { Accesorio } from '../../interfaces/accesorios';
+import { Productos as ProductoCatalogo } from '../../interfaces/productos';
 import { CarritoService } from '../../services/carrito-service';
 
 interface Especificacion {
@@ -43,6 +45,7 @@ interface RangoPrecio {
 }
 
 const IMAGEN_BASE_URL = 'http://localhost:8080/imagenes/';
+const IMAGEN_PLACEHOLDER = '/img/carrusel/moto1.jpg';
 
 @Component({
   imports: [CurrencyPipe],
@@ -55,6 +58,7 @@ export class Productos implements OnInit {
   private motosService = inject(MotosService);
   private repuestosService = inject(RespuestosService);
   private accesoriosService = inject(AccesoriosService);
+  private productosService = inject(ProductosService);
   private carrito = inject(CarritoService);
 
   /** id del último producto agregado, para mostrar "✓ Agregado" un momento. */
@@ -62,12 +66,14 @@ export class Productos implements OnInit {
   private timerAgregado?: ReturnType<typeof setTimeout>;
 
   imagenBaseURL = 'http://localhost:8080/imagenes/';
+  readonly imagenPlaceholder = IMAGEN_PLACEHOLDER;
 
   // Pestañas de navegación
   readonly secciones = [
     { id: 'motos', titulo: 'Motos' },
     { id: 'repuestos', titulo: 'Repuestos' },
     { id: 'accesorios', titulo: 'Accesorios' },
+    { id: 'productos', titulo: 'Productos' },
   ];
 
   // Signals: la app no usa zone.js, así que los datos que llegan del backend
@@ -77,7 +83,7 @@ export class Productos implements OnInit {
 
   private readonly POR_PAGINA = 4;
 
-  visibles: Record<string, number> = { motos: 4, repuestos: 4, accesorios: 4 };
+  visibles: Record<string, number> = { motos: 4, repuestos: 4, accesorios: 4, productos: 4 };
 
   readonly rangosPrecio: RangoPrecio[] = [
     { etiqueta: 'Hasta $ 3.000.000', min: null, max: 3000000 },
@@ -104,7 +110,7 @@ export class Productos implements OnInit {
     this.cargarCatalogo();
   }
 
-  /** Pide las tres categorías al backend en paralelo. Si una falla, las otras se muestran igual. */
+  /** Pide las cuatro categorías en paralelo; los resultados disponibles se muestran aunque alguna falle. */
   cargarCatalogo(): void {
     this.cargando.set(true);
 
@@ -112,11 +118,13 @@ export class Productos implements OnInit {
       motos: this.pedir<Moto>(this.motosService.getAll()),
       repuestos: this.pedir<Repuesto>(this.repuestosService.getAll()),
       accesorios: this.pedir<Accesorio>(this.accesoriosService.getAll()),
-    }).subscribe(({ motos, repuestos, accesorios }) => {
+      productos: this.pedir<ProductoCatalogo>(this.productosService.getAll()),
+    }).subscribe(({ motos, repuestos, accesorios, productos }) => {
       this.categorias.set([
         { id: 'motos', titulo: 'Motos', error: motos === null, productos: (motos ?? []).map(m => this.desdeMoto(m)) },
         { id: 'repuestos', titulo: 'Repuestos', error: repuestos === null, productos: (repuestos ?? []).map(r => this.desdeItem(r, 'repuesto')) },
         { id: 'accesorios', titulo: 'Accesorios', error: accesorios === null, productos: (accesorios ?? []).map(a => this.desdeItem(a, 'accesorio')) },
+        { id: 'productos', titulo: 'Productos', error: productos === null, productos: (productos ?? []).map(p => this.desdeProducto(p)) },
       ]);
       this.cargando.set(false);
     });
@@ -126,6 +134,7 @@ export class Productos implements OnInit {
   private pedir<T>(peticion: Observable<unknown>): Observable<T[] | null> {
     return peticion.pipe(
       map((response) => {
+        if (Array.isArray(response)) return response as T[];
         if (typeof response !== 'object' || response === null) return null;
         const body = response as Record<string, unknown>;
         const success = body['resultado'] === 'bien' || body['result'] === 'fine';
@@ -147,13 +156,28 @@ export class Productos implements OnInit {
       marca: m.marca,
       precio: Number(m.precio),
       stock: Number(m.stock),
-      imagenes: [IMAGEN_BASE_URL + m.Foto],
+      imagenes: [this.construirUrlImagen(m.Foto)],
       especificaciones: [
         { icono: '🔧', valor: `${m.cilindraje} cc`, etiqueta: 'Cilindraje' },
         { icono: '📅', valor: String(m.modelo), etiqueta: 'Modelo' },
         { icono: '🏍️', valor: m.categoria, etiqueta: 'Tipo' },
         { icono: '📦', valor: String(m.stock), etiqueta: 'Disponibles' },
       ],
+    };
+  }
+
+  private desdeProducto(producto: ProductoCatalogo): Producto {
+    return {
+      id: producto._id ?? `producto-${producto.modelo}`,
+      nombre: producto.modelo,
+      marca: producto.color || '',
+      precio: Number(producto.precio),
+      stock: 1,
+      imagenes: [this.construirUrlImagen(producto.imagen)],
+      descripcion: producto.descripcion,
+      ...(producto.categoria
+        ? { especificaciones: [{ icono: '', valor: producto.categoria, etiqueta: 'Categoría' }] }
+        : {}),
     };
   }
 
@@ -167,9 +191,25 @@ export class Productos implements OnInit {
       marca: item.marca,
       precio: Number(item.precio),
       stock: Number(item.stock),
-      imagenes: [IMAGEN_BASE_URL + item.Foto],
+      imagenes: [this.construirUrlImagen(item.Foto)],
       ...('descripcion' in item && item.descripcion ? { descripcion: item.descripcion } : {}),
     };
+  }
+
+  private construirUrlImagen(imagen: string | null | undefined): string {
+    const nombreImagen = imagen?.trim();
+    if (!nombreImagen) return this.imagenPlaceholder;
+    if (/^(https?:\/\/|\/)/i.test(nombreImagen)) return nombreImagen;
+    return IMAGEN_BASE_URL + nombreImagen.replace(/^\/+/, '');
+  }
+
+  usarImagenPlaceholder(event: Event): void {
+    if (
+      event.target instanceof HTMLImageElement &&
+      !event.target.src.endsWith(this.imagenPlaceholder)
+    ) {
+      event.target.src = this.imagenPlaceholder;
+    }
   }
 
   categoriasVisibles(): Categoria[] {
