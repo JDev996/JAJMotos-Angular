@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class RespuestosService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/respuestos';
+  private apiUrl = 'http://localhost:8080/repuestos';
 
   private headers() {
     const token = typeof window !== 'undefined' ? window.localStorage.getItem('token') : null;

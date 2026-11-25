@@ -1,9 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { Observable, catchError, forkJoin, map, of } from 'rxjs';
 import { CarritoService } from '../../services/carrito-service';
+import { MotosService } from '../../services/motos-service';
+import { RespuestosService } from '../../services/respuestos-service';
+import { AccesoriosService } from '../../services/accesorios-service';
+import { ProductosService } from '../../services/productos-service';
+import { Productos as ProductoCatalogo } from '../../interfaces/productos';
 
 interface CatalogItem {
   id: string;
@@ -11,7 +17,23 @@ interface CatalogItem {
   brand: string;
   price: number;
   image: string;
-  type: 'Moto' | 'Repuesto';
+  stock: number;
+  type: 'Moto' | 'Repuesto' | 'Accesorio' | 'Producto';
+}
+
+interface CatalogProduct {
+  _id?: string;
+  modelo?: string;
+  nombre?: string;
+  referencia?: string;
+  marca?: string;
+  color?: string;
+  categoria?: string;
+  descripcion?: string;
+  imagen?: string;
+  precio?: number | string;
+  stock?: number | string;
+  Foto?: string;
 }
 
 interface FavoriteTokenPayload {
@@ -24,6 +46,9 @@ interface CatalogResponse {
   resultado?: unknown;
   mensaje?: unknown;
   datos?: unknown;
+  result?: unknown;
+  message?: unknown;
+  data?: unknown;
 }
 
 interface UsuarioActual {
@@ -40,61 +65,8 @@ interface PerfilResponse {
   datos: UsuarioActual | null;
 }
 
-const motos: CatalogItem[] = [
-  {
-    id: 'moto-suzuki-gsxr-1000r',
-    name: 'GSXR 1000R',
-    brand: 'SUZUKI',
-    price: 85_000_000,
-    image: 'img/productos/MOTOS/Suzuki1.png',
-    type: 'Moto',
-  },
-  {
-    id: 'moto-ducati-streetfighter-v4s',
-    name: 'STREETFIGHTER V4S',
-    brand: 'DUCATI',
-    price: 125_000_000,
-    image: 'img/productos/MOTOS/Ducati1.png',
-    type: 'Moto',
-  },
-  {
-    id: 'moto-yamaha-mt09-sp',
-    name: 'MT09 SP',
-    brand: 'YAMAHA',
-    price: 75_000_000,
-    image: 'img/productos/MOTOS/yamaha1.png',
-    type: 'Moto',
-  },
-];
-
-const repuestos: CatalogItem[] = [
-  {
-    id: 'repuesto-honda-farola-cbr',
-    name: 'FAROLA CBR',
-    brand: 'HONDA',
-    price: 2_300_000,
-    image: 'img/productos/REPUESTOS/CBR33.jpg',
-    type: 'Repuesto',
-  },
-  {
-    id: 'repuesto-yamaha-carenaje-r6',
-    name: 'CARENAJE R6',
-    brand: 'YAMAHA',
-    price: 1_700_000,
-    image: 'img/productos/REPUESTOS/R633.png',
-    type: 'Repuesto',
-  },
-  {
-    id: 'repuesto-kawasaki-farola-z900',
-    name: 'FAROLA Z900',
-    brand: 'KAWASAKI',
-    price: 2_900_000,
-    image: 'img/productos/REPUESTOS/Z90022.png',
-    type: 'Repuesto',
-  },
-];
-
-const catalog = [...motos, ...repuestos];
+const IMAGEN_BASE_URL = 'http://localhost:8080/imagenes/';
+const IMAGEN_PLACEHOLDER = '/img/carrusel/moto1.jpg';
 
 @Component({
   selector: 'app-user-panel',
@@ -107,13 +79,36 @@ export class UserPanelComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly carrito = inject(CarritoService);
+  private readonly motosService = inject(MotosService);
+  private readonly repuestosService = inject(RespuestosService);
+  private readonly accesoriosService = inject(AccesoriosService);
+  private readonly productosService = inject(ProductosService);
 
-  readonly motos = motos;
-  readonly repuestos = repuestos;
+  readonly catalogo = signal<CatalogItem[]>([]);
+  readonly cargandoCatalogo = signal(true);
+  readonly erroresCatalogo = signal<string[]>([]);
+  readonly imagenPlaceholder = IMAGEN_PLACEHOLDER;
   usuarioActual: UsuarioActual | null = null;
   favorites: string[] = [];
   favoritesError = '';
   private favoritesStorageKey = 'jajmotos:favorites';
+  private sessionErrorHandled = false;
+
+  get motos(): CatalogItem[] {
+    return this.catalogo().filter((item) => item.type === 'Moto');
+  }
+
+  get repuestos(): CatalogItem[] {
+    return this.catalogo().filter((item) => item.type === 'Repuesto' || item.type === 'Producto');
+  }
+
+  get accesorios(): CatalogItem[] {
+    return this.catalogo().filter((item) => item.type === 'Accesorio');
+  }
+
+  get favoriteItems(): CatalogItem[] {
+    return this.catalogo().filter((item) => this.favorites.includes(item.id));
+  }
 
   constructor() {
     this.loadFavorites();
@@ -148,29 +143,138 @@ export class UserPanelComponent implements OnInit {
         },
       });
 
-    this.http
-      .get<CatalogResponse>('http://localhost:8080/motos', { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('Respuesta de GET /motos:', response);
-        },
-        error: (error: unknown) => {
-          console.error('Error al consultar GET /motos:', error);
-          this.handleRequestError(error);
-        },
-      });
+    this.cargarCatalogo();
+  }
 
-    this.http
-      .get<CatalogResponse>('http://localhost:8080/repuestos', { headers })
-      .subscribe({
-        next: (response) => {
-          console.log('Respuesta de GET /repuestos:', response);
-        },
-        error: (error: unknown) => {
-          console.error('Error al consultar GET /repuestos:', error);
+  cargarCatalogo(): void {
+    this.cargandoCatalogo.set(true);
+    this.erroresCatalogo.set([]);
+
+    forkJoin({
+      motos: this.pedirCatalogo(this.motosService.getAll(), 'Motos', 'Moto'),
+      repuestos: this.pedirCatalogo(this.repuestosService.getAll(), 'Repuestos', 'Repuesto'),
+      accesorios: this.pedirCatalogo(this.accesoriosService.getAll(), 'Accesorios', 'Accesorio'),
+      productos: this.pedirProductos(),
+    }).subscribe(({ motos, repuestos, accesorios, productos }) => {
+      this.catalogo.set([
+        ...(motos ?? []),
+        ...(repuestos ?? []),
+        ...(accesorios ?? []),
+        ...(productos ?? []),
+      ]);
+      this.cargandoCatalogo.set(false);
+    });
+  }
+
+  private pedirProductos(): Observable<CatalogItem[] | null> {
+    return this.productosService.getAll().pipe(
+      map((products) => products.map((product) => this.convertirProducto(product))),
+      catchError((error: unknown) => {
+        console.error('Error al cargar productos:', error);
+        this.erroresCatalogo.update((errores) =>
+          errores.includes('Productos') ? errores : [...errores, 'Productos'],
+        );
+        return of(null);
+      }),
+    );
+  }
+
+  private convertirProducto(product: ProductoCatalogo): CatalogItem {
+    return {
+      id: product._id ?? `producto-${product.modelo}`,
+      name: product.modelo,
+      brand: product.color || '',
+      price: Number(product.precio),
+      stock: 1,
+      image: this.construirUrlImagen(product.imagen),
+      type: 'Producto',
+    };
+  }
+
+  private pedirCatalogo(
+    request: Observable<unknown>,
+    categoria: string,
+    type: CatalogItem['type'],
+  ): Observable<CatalogItem[] | null> {
+    return request.pipe(
+      map((response) => this.convertirRespuestaCatalogo(response, type)),
+      catchError((error: unknown) => {
+        console.error(`Error al cargar ${categoria.toLowerCase()}:`, error);
+        this.erroresCatalogo.update((errores) =>
+          errores.includes(categoria) ? errores : [...errores, categoria],
+        );
+
+        if (
+          error instanceof HttpErrorResponse &&
+          (error.status === 401 || error.status === 403) &&
+          !this.sessionErrorHandled
+        ) {
+          this.sessionErrorHandled = true;
           this.handleRequestError(error);
-        },
-      });
+        }
+
+        return of(null);
+      }),
+    );
+  }
+
+  private convertirRespuestaCatalogo(
+    response: unknown,
+    type: CatalogItem['type'],
+  ): CatalogItem[] {
+    if (typeof response !== 'object' || response === null) {
+      throw new Error('La respuesta del catálogo no tiene un formato válido.');
+    }
+
+    if (Array.isArray(response)) {
+      return response.map((product: CatalogProduct) => this.convertirCatalogItem(product, type));
+    }
+
+    const body = response as CatalogResponse;
+    const success = body.resultado === 'bien' || body.result === 'fine';
+    const products = body.datos ?? body.data;
+    if (!success || !Array.isArray(products)) {
+      throw new Error('La respuesta del catálogo no contiene productos válidos.');
+    }
+
+    return products.map((product: CatalogProduct) => this.convertirCatalogItem(product, type));
+  }
+
+  private convertirCatalogItem(
+    product: CatalogProduct,
+    type: CatalogItem['type'],
+  ): CatalogItem {
+    const name =
+      type === 'Moto'
+        ? product.modelo || product.referencia
+        : product.nombre || product.referencia || product.modelo;
+    const brand = product.marca || '';
+    const reference = product.referencia || name || 'producto';
+    return {
+      id: product._id ?? `${type.toLowerCase()}-${brand}-${reference}`,
+      name: name || reference,
+      brand,
+      price: Number(product.precio ?? 0),
+      stock: Number(product.stock ?? 0),
+      image: this.construirUrlImagen(product.Foto),
+      type,
+    };
+  }
+
+  private construirUrlImagen(image: string | null | undefined): string {
+    const nombreImagen = image?.trim();
+    if (!nombreImagen) return this.imagenPlaceholder;
+    if (/^(https?:\/\/|\/)/i.test(nombreImagen)) return nombreImagen;
+    return `${IMAGEN_BASE_URL}${nombreImagen.replace(/^\/+/, '')}`;
+  }
+
+  usarImagenPlaceholder(event: Event): void {
+    if (
+      event.target instanceof HTMLImageElement &&
+      !event.target.src.endsWith(this.imagenPlaceholder)
+    ) {
+      event.target.src = this.imagenPlaceholder;
+    }
   }
 
   private handleRequestError(error: unknown): void {
@@ -188,10 +292,6 @@ export class UserPanelComponent implements OnInit {
     }
 
     window.alert('Error al cargar los datos. Intenta de nuevo más tarde.');
-  }
-
-  get favoriteItems(): CatalogItem[] {
-    return catalog.filter((item) => this.favorites.includes(item.id));
   }
 
   isFavorite(itemId: string): boolean {
@@ -291,9 +391,7 @@ export class UserPanelComponent implements OnInit {
         throw new Error('La lista de favoritos tiene un formato no válido.');
       }
 
-      this.favorites = parsed.filter((id) =>
-        catalog.some((item) => item.id === id),
-      );
+      this.favorites = parsed;
     } catch {
       this.favoritesError = 'No se pudo cargar tu lista de favoritos guardada.';
     }

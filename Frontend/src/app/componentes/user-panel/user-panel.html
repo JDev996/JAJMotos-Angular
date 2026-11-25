@@ -19,7 +19,7 @@
     <div class="catalog-grid">
       @for (moto of motos; track moto.id) {
         <article class="card catalog-card">
-          <img class="card-img-top" [src]="moto.image" [alt]="moto.brand + ' ' + moto.name" />
+          <img class="card-img-top" [src]="moto.image || imagenPlaceholder" (error)="usarImagenPlaceholder($event)" [alt]="moto.brand + ' ' + moto.name" />
           <div class="card-body">
             <p class="item-brand">{{ moto.brand }}</p>
             <h3 class="card-title">{{ moto.name }}</h3>
@@ -50,7 +50,7 @@
     <div class="catalog-grid">
       @for (repuesto of repuestos; track repuesto.id) {
         <article class="card catalog-card">
-          <img class="card-img-top" [src]="repuesto.image" [alt]="repuesto.name" />
+          <img class="card-img-top" [src]="repuesto.image || imagenPlaceholder" (error)="usarImagenPlaceholder($event)" [alt]="repuesto.name" />
           <div class="card-body">
             <p class="item-brand">{{ repuesto.brand }}</p>
             <h3 class="card-title">{{ repuesto.name }}</h3>
@@ -62,6 +62,37 @@
               (click)="guardarEnGaraje(repuesto)"
             >
               {{ isFavorite(repuesto.id) ? '♥ En favoritos · agregar otra al carrito' : '♡ Guardar en favoritos y agregar al carrito' }}
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="catalog-section" aria-labelledby="accesorios-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">PERSONALIZA TU MOTO</p>
+        <h2 id="accesorios-title">Catálogo de Accesorios</h2>
+      </div>
+      <span class="section-count">{{ accesorios.length }} productos</span>
+    </div>
+
+    <div class="catalog-grid">
+      @for (accesorio of accesorios; track accesorio.id) {
+        <article class="card catalog-card">
+          <img class="card-img-top" [src]="accesorio.image || imagenPlaceholder" (error)="usarImagenPlaceholder($event)" [alt]="accesorio.name" />
+          <div class="card-body">
+            <p class="item-brand">{{ accesorio.brand }}</p>
+            <h3 class="card-title">{{ accesorio.name }}</h3>
+            <p class="item-price">{{ accesorio.price | currency:'COP':'symbol-narrow':'1.0-0':'es-CO' }}</p>
+            <button
+              type="button"
+              class="btn favorite-button"
+              [class.is-favorite]="isFavorite(accesorio.id)"
+              (click)="guardarEnGaraje(accesorio)"
+            >
+              {{ isFavorite(accesorio.id) ? '♥ En favoritos · agregar otro al carrito' : '♡ Guardar en favoritos y agregar al carrito' }}
             </button>
           </div>
         </article>
@@ -86,7 +117,7 @@
       <div class="favorites-list">
         @for (item of favoriteItems; track item.id) {
           <article class="favorite-item">
-            <img [src]="item.image" [alt]="item.name" />
+            <img [src]="item.image || imagenPlaceholder" (error)="usarImagenPlaceholder($event)" [alt]="item.name" />
             <div class="favorite-details">
               <span class="item-brand">{{ item.type }} · {{ item.brand }}</span>
               <h3>{{ item.name }}</h3>

@@ -58,7 +58,8 @@
                   <div class="col-md-4">
                     <article class="card h-100 shadow-sm">
                       <img
-                        [src]="prod.imagenes[0]"
+                        [src]="prod.imagenes[0] || imagenPlaceholder"
+                        (error)="usarImagenPlaceholder($event)"
                         class="card-img-top p-2 object-fit-contain"
                         style="height: 200px;"
                         [alt]="prod.nombre">
